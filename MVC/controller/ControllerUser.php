@@ -1,6 +1,8 @@
 <?php
 RequirePage::model("User");
+RequirePage::model("Privilege");
 RequirePage::model("Stamp");
+RequirePage::model("Customer");
 RequirePage::model("StampCategory");
 
 class ControllerUser implements Controller {
@@ -10,17 +12,23 @@ class ControllerUser implements Controller {
      */
     public function index() {
         $user = new User;
+/*         $customer = new Customer; */
         $read = $user->read();
         $data = ["users" => $read];
-        Twig::render("user-index.php", $data);
+        Twig::render("user/user-index.php", $data);
     }
 
     /**
      * afficher le formulaire créer
      */
     public function create() {
-        if(isset($_SESSION["fingerPrint"]) && $_SESSION["name"] == "root") Twig::render("user-create.php");
-        else RequirePage::redirect("error");
+        if(isset($_SESSION["fingerPrint"]) && $_SESSION["privilege_id"] == "1") {
+            $privilege = new Privilege;
+            $data["privileges"] = $privilege->read();
+
+            Twig::render("user/user-create.php", $data);
+
+        } else RequirePage::redirect("error");
     }
 
     /**
@@ -81,11 +89,11 @@ class ControllerUser implements Controller {
         $user = new User;
         $data["user"] = $user->readId($id);
 
-        $stamp = new Stamp;
+/*         $stamp = new Stamp;
         $where = ["target" => "user_id", "value" => $data["user"]["id"]];
-        $data["stamps"] = $stamp->readWhere($where);
+        $data["stamps"] = $stamp->readWhere($where); */
 
-        Twig::render("user-show.php", $data);
+        Twig::render("user/user-show.php", $data);
     }
 
     /**
@@ -162,8 +170,11 @@ class ControllerUser implements Controller {
         $password = $_POST["password"];
         $dbPassword = $readUser["password"];
         $salt = "7dh#9fj0K";
-
-        if(password_verify($password.$salt, $dbPassword)){
+        $_SESSION["id"] = $readUser["id"];
+        $_SESSION["name"] = $readUser["name"];
+        $_SESSION["fingerPrint"] = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
+        $_SESSION["privilege_id"] = $readUser["privilege_id"];
+/*         if(password_verify($password.$salt, $dbPassword)){
             session_regenerate_id();
             $_SESSION["id"] = $readUser["id"];
             $_SESSION["name"] = $readUser["name"];
@@ -174,6 +185,6 @@ class ControllerUser implements Controller {
             exit();
         }
         if($_SESSION["name"] == "root") RequirePage::redirect("panel");
-        else RequirePage::redirect("user/profile");
+        else RequirePage::redirect("user/profile"); */
     }
 }

@@ -6,14 +6,17 @@ RequirePage::model("Category");
 
 class ControllerPanel implements Controller {
 
+    public function __construct() {
+/*         CheckSession::sessionAuth(); */
+    }
     /**
      * afficher l'index, requiert toutes les entrées des tables simples
      */
     public function index() {
-        if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") {
+/*         if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") {
             RequirePage::redirect("error");
             exit();
-        }
+        } */
 
         $stamp = new Stamp;
         $data["stamps"] = $stamp->read();

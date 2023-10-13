@@ -15,7 +15,7 @@ class ControllerAspect implements Controller {
      * valider utilisateur et afficher le formulaire créer
      */
     public function create() {
-        if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") RequirePage::redirect("error");
+        if(!isset($_SESSION["fingerPrint"]) || $_SESSION["privilege_id"] != "1") RequirePage::redirect("error");
         else Twig::render("aspect/aspect-create.php");
     }
 

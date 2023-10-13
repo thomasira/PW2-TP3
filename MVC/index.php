@@ -1,22 +1,14 @@
 <?php
-require_once __DIR__ . "/vendor/autoload.php";
-require_once __DIR__ . "/controller/Controller.php";
-require_once __DIR__ . "/lib/ViewLayout.php"; 
-require_once __DIR__ . "/lib/RequirePage.php";
-require_once __DIR__ . "/lib/Twig.php";
-
+session_start();
 define("ROOT", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
 
+require_once __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . "/controller/Controller.php";
+require_once __DIR__ . "/lib/RequirePage.php";
+require_once __DIR__ . "/lib/Twig.php";
+require_once __DIR__ . "/lib/CheckSession.php";
+
 $url = isset($_SERVER["PATH_INFO"]) ? explode("/", ltrim($_SERVER["PATH_INFO"], "/")) : "/";
-
-session_start();
-
-$name = "home";
-if ($url != "/") $name = $url[0];
-if (isset($url[1])) $name .= " | ". $url[1];
-
-ViewLayout::schoolHeader("PW2-TP2 | $name");
-ViewLayout::navigation();
 
 if ($url == "/") {
     $controllerHome = __DIR__ . "/controller/ControllerHome.php";
@@ -48,5 +40,4 @@ if ($url == "/") {
         $controller->error();
     }
 }
-ViewLayout::footer();
 ?>

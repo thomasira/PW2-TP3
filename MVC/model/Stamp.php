@@ -10,7 +10,7 @@ class Stamp extends Crud {
         "description", 
         "origin", 
         "year", 
-        "user_id", 
+        "customer_user_id", 
         "aspect_id",
         "image_link"
     ];
