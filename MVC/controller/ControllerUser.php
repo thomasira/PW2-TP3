@@ -170,21 +170,19 @@ class ControllerUser implements Controller {
         $password = $_POST["password"];
         $dbPassword = $readUser["password"];
         $salt = "7dh#9fj0K";
-        $_SESSION["id"] = $readUser["id"];
-        $_SESSION["name"] = $readUser["name"];
-        $_SESSION["fingerPrint"] = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
-        $_SESSION["privilege_id"] = $readUser["privilege_id"];
-/*         if(password_verify($password.$salt, $dbPassword)){
+        
+        if(password_verify($password.$salt, $dbPassword)){
             session_regenerate_id();
             $_SESSION["id"] = $readUser["id"];
             $_SESSION["name"] = $readUser["name"];
             $_SESSION["fingerPrint"] = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
+            $_SESSION["privilege_id"] = $readUser["privilege_id"];
         } else {
             $data["error"] = "password not correct";
             Twig::render("login-index.php", $data);
             exit();
         }
         if($_SESSION["name"] == "root") RequirePage::redirect("panel");
-        else RequirePage::redirect("user/profile"); */
+        else RequirePage::redirect("user/profile");
     }
 }
