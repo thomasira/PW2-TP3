@@ -1,0 +1,43 @@
+body{
+    background-color: var(--colorLight);
+}
+body>main{
+    padding: var(--padLrg);
+    max-width: 1400px;
+}
+body>main>*+*{
+    margin-top: var(--padMed);
+}
+p{
+    font-size: var(--fontSml);
+}
+input, label, textarea{
+    display: block;
+}
+input, textarea{
+    padding: var(--padSmlst);
+}
+li{
+
+    list-style: none;
+
+}
+
+
+
+/* rythme */
+section>form>*+*, form>section>*+*{
+    margin-top: var(--padSml);
+}
+div>form>*+*{
+    margin-top: 0;
+}
+section>*+*{
+    margin-top: var(--padMed);
+}
+*+ul{
+    margin-top: var(--padSmlr);
+}
+ul>*+*{
+    margin-top: var(--padSmlr);
+}

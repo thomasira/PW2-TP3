@@ -1,0 +1,6 @@
+
+.btn{
+    padding: var(--padSmlr);
+    background-color: var(--colorDark);
+    color: var(--colorLight);
+}

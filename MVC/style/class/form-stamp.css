@@ -1,0 +1,38 @@
+
+.form-stamp{
+    display: flex;
+    flex-flow: row;
+    gap: var(--padLrg);
+}
+
+.form-stamp input[type="checkbox"]{
+    appearance: none;
+}
+.form-stamp section:last-of-type div:first-of-type div{
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--padSmlst);
+}
+.form-stamp section:last-of-type div:last-of-type>*+*{
+    margin-top: var(--padSmlr);
+} 
+
+.form-stamp section:last-of-type div:first-of-type label{
+    border: 1px solid var(--colorDark);
+    border-radius: 1em;
+    box-shadow: 2px 2px 2px var(--colorShadow);
+    padding: var(--padSmlst) var(--padSmlr);
+    max-width: max-content;
+}
+.form-stamp section:last-of-type div:first-of-type input:checked + label{
+    background-color: var(--colorDark);
+    color: var(--colorLight);
+}
+
+.form-stamp section:last-of-type div:first-of-type label:hover{
+    cursor:pointer;
+}
+
+.form-stamp section:last-of-type div:first-of-type>*+*{
+    margin-top: var(--padSmlr);
+}

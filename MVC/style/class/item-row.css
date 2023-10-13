@@ -1,0 +1,23 @@
+
+.item-row{
+    max-width: 400px;
+    display: flex;
+    gap: var(--padLrg);
+    background-color: var(--colorSec);
+    padding: var(--padSmlst) var(--padSmlr);
+    justify-content: space-between;
+    align-items: center;
+}
+.item-row a{
+    max-width: none;
+    flex: 1;
+}
+.item-row>div{
+    display: flex;
+    gap: var(--padSml);
+}
+
+.item-row a:hover{
+    font-weight: bold;
+    color: var(--colorMain);
+}

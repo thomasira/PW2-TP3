@@ -1,0 +1,12 @@
+
+.icon{
+    border: none;
+    background: none;
+    color: var(--colorDark);
+    font-size: var(--fontMed);
+    font-weight: bold;
+}
+
+.icon:hover{
+    cursor: pointer;
+}
