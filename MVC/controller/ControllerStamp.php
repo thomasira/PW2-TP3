@@ -15,7 +15,7 @@ class ControllerStamp implements Controller {
         $stamp = new Stamp;
         $data["stamps"] = $stamp->read();
 
-        Twig::render("stamp-index.php", $data);
+        Twig::render("stamp/stamp-index.php", $data);
     }
 
     /**
@@ -33,7 +33,7 @@ class ControllerStamp implements Controller {
         $user = new User;
         $data["users"] = $user->read();
 
-        Twig::render("stamp-create.php", $data);
+        Twig::render("stamp/stamp-create.php", $data);
     }
 
     /**
@@ -99,7 +99,7 @@ class ControllerStamp implements Controller {
         foreach ($data["aspects"] as &$aspect) {
             if($data["stamp"]["aspect_id"] == $aspect["id"]) $aspect["selected"] = true;
         }
-        Twig::render("stamp-edit.php", $data);
+        Twig::render("stamp/stamp-edit.php", $data);
     }
 
     /**
@@ -125,7 +125,7 @@ class ControllerStamp implements Controller {
                 $data["categories"][] = $category->readId($stampCategory["category_id"]);
             }
         }
-        Twig::render("stamp-show.php", $data);
+        Twig::render("stamp/stamp-show.php", $data);
     }
 
     /**

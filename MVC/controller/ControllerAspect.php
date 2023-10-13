@@ -16,7 +16,7 @@ class ControllerAspect implements Controller {
      */
     public function create() {
         if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") RequirePage::redirect("error");
-        else Twig::render("aspect-create.php");
+        else Twig::render("aspect/aspect-create.php");
     }
 
     /**
@@ -62,7 +62,7 @@ class ControllerAspect implements Controller {
             $aspect = new Aspect;
             $data["aspect"] = $aspect->readId($id);
 
-            Twig::render("aspect-edit.php", $data);
+            Twig::render("aspect/aspect-edit.php", $data);
         }
     }
 

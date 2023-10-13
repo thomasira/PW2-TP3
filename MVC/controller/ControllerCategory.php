@@ -11,7 +11,7 @@ class ControllerCategory implements Controller {
         $category = new Category;
         $data["categories"] = $category->read();
         
-        Twig::render("category-index.php", $data);
+        Twig::render("category/category-index.php", $data);
     }
 
     /**
@@ -19,7 +19,7 @@ class ControllerCategory implements Controller {
      */
     public function create() {
         if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") RequirePage::redirect("error");
-        else Twig::render("category-create.php");
+        else Twig::render("category/category-create.php");
     }
 
     /**
@@ -57,7 +57,7 @@ class ControllerCategory implements Controller {
             $category = new Category;
             $data["category"] = $category->readId($id);
             
-            Twig::render("category-edit.php", $data);
+            Twig::render("category/category-edit.php", $data);
         }
     }
 

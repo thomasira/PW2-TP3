@@ -2,7 +2,7 @@
 require_once "./model/Crud.php";
 
 class Stamp extends Crud {
-    public $table = "pw2tp2_stamp";
+    public $table = "pw2tp3_stamp";
     public $primaryKey = "id";
     public $fillable = [
         "id", 
@@ -11,6 +11,7 @@ class Stamp extends Crud {
         "origin", 
         "year", 
         "user_id", 
-        "aspect_id"
+        "aspect_id",
+        "image_link"
     ];
 }
