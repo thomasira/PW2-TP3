@@ -10,8 +10,7 @@ class ControllerPanel implements Controller {
 
     public function __construct() {
 
-        print_r($_SESSION);
-/*         CheckSession::sessionAuth(); */
+        CheckSession::sessionAuth();
     }
     /**
      * afficher l'index, requiert toutes les entrées des tables simples
@@ -29,9 +28,10 @@ class ControllerPanel implements Controller {
         if($data["staff"]) {
             foreach($data["staff"] as &$employee) {
                 $privilege = new Privilege;
-                $employee["privilege"] = $privilege->readId($employee["id"])["privilege"];
+                $employee["privilege"] = $privilege->readId($employee["privilege_id"])["privilege"];
             }
         }
+
 
         $category = new Category;
         $data["categories"] = $category->read();

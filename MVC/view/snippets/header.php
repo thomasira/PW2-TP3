@@ -23,7 +23,7 @@
         {% if session.privilege_id == 1 %}
             <a href="{{ path }}panel">Panel</a>
         {% elseif session.privilege_id == 3 %}
-            <a href="{{ path }}panel">Profile</a>
+            <a href="{{ path }}profile">Profile</a>
         {% endif %}
 
         <a href="{{ path }}login/logout">Logout</a>
