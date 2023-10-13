@@ -1,0 +1,9 @@
+INSERT INTO
+    Actors (id, name, gender, salary)
+SELECT
+    id,
+    name,
+    gender,
+    salary
+FROM
+    employees
