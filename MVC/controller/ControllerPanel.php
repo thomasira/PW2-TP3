@@ -1,28 +1,35 @@
 <?php
 RequirePage::model("Stamp");
-RequirePage::model("User");
 RequirePage::model("Aspect");
+RequirePage::model("Customer");
+RequirePage::model("Staff");
+RequirePage::model("Privilege");
 RequirePage::model("Category");
 
 class ControllerPanel implements Controller {
 
     public function __construct() {
-        CheckSession::sessionAuth();
+
+        print_r($_SESSION);
+/*         CheckSession::sessionAuth(); */
     }
     /**
      * afficher l'index, requiert toutes les entrées des tables simples
      */
     public function index() {
-/*         if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") {
-            RequirePage::redirect("error");
-            exit();
-        } */
 
         $stamp = new Stamp;
         $data["stamps"] = $stamp->read();
 
-        $user = new User;
-        $data["users"] = $user->read();
+        $customer = new Customer;
+        $data["customers"] = $customer->read();
+
+        $staff = new Staff;
+        $data["staff"] = $staff->read();
+        foreach($data["staff"] as &$employee) {
+            $privilege = new Privilege;
+            $employee["privilege"] = $privilege->readId($employee["id"])["privilege"];
+        }
 
         $category = new Category;
         $data["categories"] = $category->read();

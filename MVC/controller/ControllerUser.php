@@ -1,6 +1,7 @@
 <?php
 RequirePage::model("User");
 RequirePage::model("Privilege");
+RequirePage::model("Staff");
 RequirePage::model("Stamp");
 RequirePage::model("Customer");
 RequirePage::model("StampCategory");
@@ -12,7 +13,6 @@ class ControllerUser implements Controller {
      */
     public function index() {
         $user = new User;
-/*         $customer = new Customer; */
         $read = $user->read();
         $data = ["users" => $read];
         Twig::render("user/user-index.php", $data);
@@ -22,7 +22,7 @@ class ControllerUser implements Controller {
      * afficher le formulaire créer
      */
     public function create() {
-        if(isset($_SESSION["fingerPrint"]) && $_SESSION["privilege_id"] == "1") {
+        if(CheckSession::sessionAuth() == 1) {
             $privilege = new Privilege;
             $data["privileges"] = $privilege->read();
 
@@ -70,17 +70,29 @@ class ControllerUser implements Controller {
      * enregistrer une entrée dans la DB
      */
     public function store() {
+        if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
+
         $user = new User;
         $salt = "7dh#9fj0K";
         $_POST["password"] = password_hash($_POST["password"] . $salt, PASSWORD_BCRYPT);
         $userId = $user->create($_POST);
-        
+
+
+        if($_POST["privilege_id"] < 3) {
+            $staff = new Staff;
+            $_POST["user_id"] = $userId;
+            $staff->create($_POST);
+        }
+        if($_POST["privilege_id"] == 3) {
+            $customer = new Customer;
+            $customer->create(["user_id" => $userId]);
+        }
+
         $data["success"] = "account created, please log in";
-        if(isset($_SESSION["fingerPrint"]) && $_SESSION["name"] == "root") {
+        if(CheckSession::sessionAuth() < 3) {
             RequirePage::redirect("panel");
         } else Twig::render("login-index.php", $data);
     }
-
 
     /**
      * afficher un utilisateur
@@ -170,12 +182,12 @@ class ControllerUser implements Controller {
         $password = $_POST["password"];
         $dbPassword = $readUser["password"];
         $salt = "7dh#9fj0K";
-        
+
         if(password_verify($password.$salt, $dbPassword)){
             session_regenerate_id();
             $_SESSION["id"] = $readUser["id"];
             $_SESSION["name"] = $readUser["name"];
-            $_SESSION["fingerPrint"] = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
+            $_SESSION["fingerprint"] = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR']);
             $_SESSION["privilege_id"] = $readUser["privilege_id"];
         } else {
             $data["error"] = "password not correct";

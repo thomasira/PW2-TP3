@@ -31,4 +31,12 @@
         <a href="{{ path }}login">Login</a> 
     {% endif %}
     </nav>
+{% if session %}
+    <div>
+        Bienvenue {{ session.name }}
+    {% if session.privilege_id < 3 %}
+        <p>Vous êtes connecté en tant qu{{ session.privilege_id == 1 ? "e super-admin" : "'admin" }}</p>
+    {% endif %}
+    </div>
+{% endif %}
     
