@@ -26,9 +26,11 @@ class ControllerPanel implements Controller {
 
         $staff = new Staff;
         $data["staff"] = $staff->read();
-        foreach($data["staff"] as &$employee) {
-            $privilege = new Privilege;
-            $employee["privilege"] = $privilege->readId($employee["id"])["privilege"];
+        if($data["staff"]) {
+            foreach($data["staff"] as &$employee) {
+                $privilege = new Privilege;
+                $employee["privilege"] = $privilege->readId($employee["id"])["privilege"];
+            }
         }
 
         $category = new Category;

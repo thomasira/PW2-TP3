@@ -8,10 +8,13 @@ class ControllerStaff implements Controller {
     public function index() {
         $staff = new Staff;
         $data["staff"] = $staff->read();
-        foreach ($data["staff"] as &$employee) {
-            $privilege = new Privilege;
-            $employee["privilege"] = $privilege->readId($employee["id"]);
+        if($data["staff"]){
+            foreach ($data["staff"] as &$employee) {
+                $privilege = new Privilege;
+                $employee["privilege"] = $privilege->readId($employee["id"]);
+            }
         }
+       
         Twig::render("staff/index.php", $data);
     }
     public function create() {

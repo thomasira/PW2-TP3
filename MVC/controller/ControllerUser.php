@@ -85,7 +85,6 @@ class ControllerUser implements Controller {
         }
         if($_POST["privilege_id"] == 3) {
             $customer = new Customer;
-            $customer->create(["user_id" => $userId]);
         }
 
         $data["success"] = "account created, please log in";
