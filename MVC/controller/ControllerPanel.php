@@ -9,9 +9,9 @@ RequirePage::model("Category");
 class ControllerPanel implements Controller {
 
     public function __construct() {
-
-        CheckSession::sessionAuth();
+        CheckSession::sessionAuth(2);
     }
+    
     /**
      * afficher l'index, requiert toutes les entrées des tables simples
      */

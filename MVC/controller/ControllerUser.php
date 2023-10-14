@@ -21,7 +21,7 @@ class ControllerUser implements Controller {
     /**
      * afficher le formulaire créer
      */
-    public function create() {
+/*     public function create() {
         if(CheckSession::sessionAuth() == 1) {
             $privilege = new Privilege;
             $data["privileges"] = $privilege->read();
@@ -29,7 +29,7 @@ class ControllerUser implements Controller {
             Twig::render("user/user-create.php", $data);
 
         } else RequirePage::redirect("error");
-    }
+    } */
 
     /**
      * supprimer une entrée de la DB et supprimer les entrées associées de la DB
@@ -77,7 +77,6 @@ class ControllerUser implements Controller {
         $_POST["password"] = password_hash($_POST["password"] . $salt, PASSWORD_BCRYPT);
         $userId = $user->create($_POST);
 
-
         if($_POST["privilege_id"] < 3) {
             $staff = new Staff;
             $_POST["user_id"] = $userId;
@@ -85,6 +84,8 @@ class ControllerUser implements Controller {
         }
         if($_POST["privilege_id"] == 3) {
             $customer = new Customer;
+            $_POST["user_id"] = $userId;
+            $customer->create($_POST);
         }
 
         $data["success"] = "account created, please log in";

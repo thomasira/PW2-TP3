@@ -88,7 +88,6 @@
         <a href="{{ path }}category/create" class="button">create</a>
     </section>
 
-{% if session.privilege_id == 1 %}
     <section>
         <h3><a href="{{ path }}staff">Staff</a></h3>
         <ul>
@@ -96,6 +95,7 @@
             <li class="item-row">
                 <a href="{{ path }}staff/show/{{ employee.id }}">{{ employee.name }}</a>
                 <p> | <strong>{{ employee.privilege }}</strong></p>
+            {% if (session.privilege_id == 1 or session.id == employee.id) %}
                 <div>
                     <form action="{{ path }}staff/edit" method="post">
                         <input type="hidden" name="id" value="{{ employee.id }}">
@@ -106,10 +106,13 @@
                         <input type="submit" class="icon" value="&#128465;">
                     </form>
                 </div>
+            {% endif %}
             </li>
         {% endfor %}
         </ul>
+    {% if session.privilege_id == 1%}
         <a href="{{ path }}staff/create" class="button">create</a>
+    {% endif %}
     </section>
-{% endif %}
+
 </main>

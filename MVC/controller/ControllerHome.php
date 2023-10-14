@@ -1,5 +1,6 @@
 <?php
 RequirePage::model("Stamp");
+RequirePage::model("Log");
 
 class ControllerHome implements Controller {
 
@@ -16,6 +17,7 @@ class ControllerHome implements Controller {
      * afficher page erreur
      */
     public function error() {
+
         Twig::render("error.php");
     }
 }
