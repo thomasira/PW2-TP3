@@ -9,6 +9,7 @@ class User extends Crud {
         "name",
         "email",
         "password", 
+        "address",
         "privilege_id"
     ];
 }

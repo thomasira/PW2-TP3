@@ -18,6 +18,9 @@
         <label>Password(at least 8 car.)
             <input type="password" name="password" required>
         </label>
+        <label>Address
+            <input type="text" name="address">
+        </label>
     {% if staff %}
         <label>N.A.S
             <input type="text" name="nas" required>
@@ -32,7 +35,7 @@
             </select>
         </label>
     {% elseif customer %}
-            <input type="hidden" name="privilege_id" value="3">
+        <input type="hidden" name="privilege_id" value="3">
     {% endif %}
         <input type="submit" value="create" class="button">
        </form>

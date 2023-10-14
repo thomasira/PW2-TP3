@@ -3,7 +3,8 @@
         <h2>Panel</h2>
     </header>
     <section>
-        <a href="{{ path }}log"><h3>Log</h3></a>
+        <a href="{{ path }}log" class="button">Log</a>
+        <a href="{{ path }}archive" class="button">Archive</a>
     </section>
     <section>
         <h3><a href="{{ path }}stamp">Stamps</a></h3>

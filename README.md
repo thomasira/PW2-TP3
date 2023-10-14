@@ -17,19 +17,19 @@ e2395387
 
 ## Notes
 
-2 niveaux d'accès sont possibles, soit Root et utilisateur normal. Ils ont chacuns leurs propres pages, il est donc nécéssaire de se connecter en tant que root et ensuite en tant qu'utilisateur normal pour voir tout le projet.  
+3 niveaux d'accès sont possibles, soit 1->super-admin, 2->admin, 3->customer. Ils ont chacuns leurs propres accès, il est donc nécéssaire de se connecter au trois niveaux pour voir tout le projet.  
 **voir niveaux d'accès pour plus de détails*
 
 ## Liens  
 
-**webdev**: https://e2395387.webdev.cmaisonneuve.qc.ca/PW2-TP2/  
+**webdev**: https://e2395387.webdev.cmaisonneuve.qc.ca/PW2-TP3/  
 
-**git-hub**: https://github.com/thomasIRA/PW2-TP2.git
+**git-hub**: https://github.com/thomasIRA/PW2-TP3.git
 
 
 ## Résumé  
 
-Un site où les utilisateurs peuvent se connecter et ajouter des timbres categorisés, les échanger(à venir), et autres fonctionnalités
+Un site où les utilisateurs peuvent se connecter et ajouter des timbres categorisés, les échanger(à venir), et autres fonctionnalitées comme un journal de bord et un journal d'archive de timbres, des images à importées et autres.
 
 ## Connexions
 

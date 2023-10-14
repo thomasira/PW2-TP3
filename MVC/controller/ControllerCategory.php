@@ -26,8 +26,11 @@ class ControllerCategory implements Controller {
      * supprimer les entrées de la table stamp_category associé à la clé($cat_id) et supprimer l'entrée
      */
     public function delete() {
-        checkSession::sessionAuth(2);
 
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
+            exit();
+        }
         $cat_id = $_POST["id"];
 
         $stampCategories = new StampCategory;

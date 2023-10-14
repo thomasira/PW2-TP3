@@ -26,7 +26,4 @@ class ControllerLog implements Controller {
         $log = new Log;
         $log->create($data);
     }
-
-
-
 }

@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="Thomas Aucoin-Lo">
-        <link rel="stylesheet" href="{{ path }}style/main.css">
+        <link rel="stylesheet" href="{{ path }}assets/style/main.css">
         <title>{{ title }}</title>
     </head>
     <body>
@@ -17,7 +17,7 @@
     <nav>
         <a href="{{ path }}">HOME</a>
         <a href="{{ path }}stamp">stamps</a>
-        <a href="{{ path }}user">users</a>
+        <a href="{{ path }}customer">users</a>
         <a href="{{ path }}category">categories</a>
     {% if session %}
         {% if session.privilege_id < 3 %}

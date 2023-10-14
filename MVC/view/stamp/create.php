@@ -4,7 +4,7 @@
     <header>
         <h2>Create Stamp</h2>
     </header>
-    <form action="{{ path }}stamp/store" method="post" class="form-stamp">
+    <form action="{{ path }}stamp/store" method="post" class="form-stamp" enctype="multipart/form-data">
         <section>
             <label>Name:
                 <input type="text" name="name" required>
@@ -14,6 +14,9 @@
             </label>
             <label>Year:
                 <input type="year" name="year">
+            </label>
+            <label>Image: 
+                <input type="file" accept="image/*" name="stampUpload">
             </label>
             
             </label>

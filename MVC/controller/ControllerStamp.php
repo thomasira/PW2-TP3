@@ -5,7 +5,7 @@ RequirePage::model("Customer");
 RequirePage::model("Aspect");
 RequirePage::model("Category");
 RequirePage::model("StampCategory");
-
+RequirePage::model("StampArchive");
 
 class ControllerStamp implements Controller {
 
@@ -16,7 +16,7 @@ class ControllerStamp implements Controller {
         $stamp = new Stamp;
         $data["stamps"] = $stamp->read();
 
-        Twig::render("stamp/stamp-index.php", $data);
+        Twig::render("stamp/index.php", $data);
     }
 
     /**
@@ -34,23 +34,29 @@ class ControllerStamp implements Controller {
         $customer = new Customer;
         $data["customers"] = $customer->read();
 
-        Twig::render("stamp/stamp-create.php", $data);
+        Twig::render("stamp/create.php", $data);
     }
 
     /**
      * supprimer les entrées de la table stamp_category associé à la clé($stamp_id) et supprimer l'entrée
      */
     public function delete() {
-        if(!$_POST){
-            RequirePage::redirect("error");
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
             exit();
-        }
+        } 
+
         $stamp_id = $_POST["id"];
 
         $stampCategories = new StampCategory;
         $stampCategories->deleteStampCat($stamp_id);
 
         $stamp = new Stamp;
+        $deletedStamp = $stamp->readId($stamp_id);
+
+        $stampArchive = new StampArchive;
+        $stampArchive->create($deletedStamp);
+
         $stamp->delete($stamp_id);
 
         RequirePage::redirect("stamp");
@@ -100,7 +106,7 @@ class ControllerStamp implements Controller {
         foreach ($data["aspects"] as &$aspect) {
             if($data["stamp"]["aspect_id"] == $aspect["id"]) $aspect["selected"] = true;
         }
-        Twig::render("stamp/stamp-edit.php", $data);
+        Twig::render("stamp/edit.php", $data);
     }
 
     /**
@@ -126,7 +132,7 @@ class ControllerStamp implements Controller {
                 $data["categories"][] = $category->readId($stampCategory["category_id"]);
             }
         }
-        Twig::render("stamp/stamp-show.php", $data);
+        Twig::render("stamp/show.php", $data);
     }
 
     /**
@@ -134,6 +140,11 @@ class ControllerStamp implements Controller {
      */
     public function store() {
         if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
+
+        $target_dir = "assets/image/";
+        $target_file = $target_dir . basename($_FILES["stampUpload"]["name"]);
+        move_uploaded_file($_FILES["stampUpload"]["tmp_name"], $target_file);
+        die();
 
         $stamp = new Stamp;
 
