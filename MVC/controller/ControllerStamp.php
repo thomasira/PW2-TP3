@@ -1,6 +1,7 @@
 <?php
 RequirePage::model("Stamp");
 RequirePage::model("User");
+RequirePage::model("Customer");
 RequirePage::model("Aspect");
 RequirePage::model("Category");
 RequirePage::model("StampCategory");
@@ -22,7 +23,7 @@ class ControllerStamp implements Controller {
      * afficher le formulaire créer
      */
     public function create() {
-        if(isset($_SESSION["fingerPrint"])) $data["session_user"] = $_SESSION;
+        checkSession::sessionAuth();
 
         $aspect = new Aspect;
         $data["aspects"] = $aspect->read();
@@ -30,8 +31,8 @@ class ControllerStamp implements Controller {
         $category = new Category;
         $data["categories"] = $category->read();
 
-        $user = new User;
-        $data["users"] = $user->read();
+        $customer = new Customer;
+        $data["customers"] = $customer->read();
 
         Twig::render("stamp/stamp-create.php", $data);
     }
@@ -132,14 +133,13 @@ class ControllerStamp implements Controller {
      * enregistrer une entrée dans la DB
      */
     public function store() {
-        if(!$_POST){
-            RequirePage::redirect("error");
-            exit();
-        }
+        if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
+
         $stamp = new Stamp;
 
         /* s'assurer que l'entrée soit INT */
         $_POST["year"] = intval($_POST["year"]);
+
 
         /*enregistrer les entrées liées à la table category et stamp_category */
         if(isset($_POST["new_categories"])) {

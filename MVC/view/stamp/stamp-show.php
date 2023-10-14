@@ -3,7 +3,7 @@
     <article class="file-stamp">
         <header>
             <h2>{{ stamp.name }}</h2>
-            <p>user id: {{ stamp.user_id }}</p>
+            <p>Customer id: {{ stamp.customer_user_id }}</p>
         </header>
         <section>
             <div>

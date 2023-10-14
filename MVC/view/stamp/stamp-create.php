@@ -4,7 +4,7 @@
     <header>
         <h2>Create Stamp</h2>
     </header>
-    <form action="{{ path }}/stamp/store" method="post" class="form-stamp">
+    <form action="{{ path }}stamp/store" method="post" class="form-stamp">
         <section>
             <label>Name:
                 <input type="text" name="name" required>
@@ -27,16 +27,16 @@
             <label>description:
                 <textarea name="description" cols="30" rows="10"></textarea>
             </label>
-            {% if session_user.name == 'root' %}
+            {% if session.privilege_id < 3 %}
             <label>User
-                <select name="user_id">
-                {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.name }}</option>
+                <select name="customer_user_id">
+                {% for customer in customers %}
+                    <option value="{{ customer.user_id }}">{{ customer.name }}</option>
                 {% endfor %}
                 </select>
             </label>
             {% else %}
-            <input type="hidden" name="user_id" value="{{ session_user.id }}">
+            <input type="hidden" name="customer.user_id" value="{{ session.id }}">
             {% endif %}
             <input type="submit" value="create" class="button">
         </section>
@@ -70,8 +70,5 @@
                 </label>
             </div>
         </section>
-
     </form>
-        
-
 </main>

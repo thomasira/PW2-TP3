@@ -95,7 +95,7 @@
             <li class="item-row">
                 <a href="{{ path }}staff/show/{{ employee.id }}">{{ employee.name }}</a>
                 <p> | <strong>{{ employee.privilege }}</strong></p>
-            {% if (session.privilege_id == 1 or session.id == employee.id) %}
+            {% if session.privilege_id == 1 %}
                 <div>
                     <form action="{{ path }}staff/edit" method="post">
                         <input type="hidden" name="id" value="{{ employee.id }}">

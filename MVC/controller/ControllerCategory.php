@@ -26,39 +26,32 @@ class ControllerCategory implements Controller {
      * supprimer les entrées de la table stamp_category associé à la clé($cat_id) et supprimer l'entrée
      */
     public function delete() {
-        if(!isset($_SESSION["fingerPrint"]) ||
-        $_SESSION["name"] != "root" ||
-        !isset($_POST["id"])) {
-            RequirePage::redirect("error");
-        } else {
-            $cat_id = $_POST["id"];
+        checkSession::sessionAuth(2);
 
-            $stampCategories = new StampCategory;
-            $stampCategories->deleteStampCat(null, $cat_id);
+        $cat_id = $_POST["id"];
 
-            $category = new Category;
-            $category->delete($cat_id);
+        $stampCategories = new StampCategory;
+        $stampCategories->deleteStampCat(null, $cat_id);
 
-            RequirePage::redirect("panel");
-        }
+        $category = new Category;
+        $category->delete($cat_id);
+
+        RequirePage::redirect("panel");
     }
 
     /**
      * afficher formulaire mettre à jour
      */
     public function edit() {
-        if(!isset($_SESSION["fingerPrint"]) ||
-        $_SESSION["name"] != "root" ||
-        !isset($_POST["id"])) {
-            RequirePage::redirect("error");
-        } else {
-            $id = $_POST["id"];
+        checkSession::sessionAuth(2);
 
-            $category = new Category;
-            $data["category"] = $category->readId($id);
-            
-            Twig::render("category/category-edit.php", $data);
-        }
+        $id = $_POST["id"];
+
+        $category = new Category;
+        $data["category"] = $category->readId($id);
+        
+        Twig::render("category/category-edit.php", $data);
+        
     }
 
     /**
