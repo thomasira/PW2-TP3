@@ -5,13 +5,16 @@ require_once __DIR__ . "/controller/Controller.php";
 require_once __DIR__ . "/lib/RequirePage.php";
 require_once __DIR__ . "/lib/Twig.php";
 require_once __DIR__ . "/lib/CheckSession.php";
-
+require_once __DIR__ . "/lib/LogManager.php";
 
 define("ROOT", rtrim($_SERVER["SCRIPT_NAME"], "index.php"));
 
 $url = isset($_GET["url"]) ? explode ("/", ltrim($_GET["url"], "/")) : "/";
 $name = "home";
 if ($url != "/") $name = $url[0];
+
+$log = new LogManager;
+$log->createEntry();
 
 Twig::render("header.php", ['name' => $name]);
 

@@ -32,13 +32,12 @@ class ControllerPanel implements Controller {
             }
         }
 
-
         $category = new Category;
         $data["categories"] = $category->read();
 
         $aspect = new Aspect;
         $data["aspects"] = $aspect->read();
 
-        Twig::render("panel-index.php", $data);
+        Twig::render("panel/index.php", $data);
     }
 }

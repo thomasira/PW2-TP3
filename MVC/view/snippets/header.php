@@ -20,7 +20,7 @@
         <a href="{{ path }}user">users</a>
         <a href="{{ path }}category">categories</a>
     {% if session %}
-        {% if session.privilege_id == 1 %}
+        {% if session.privilege_id < 3 %}
             <a href="{{ path }}panel">Panel</a>
         {% elseif session.privilege_id == 3 %}
             <a href="{{ path }}profile">Profile</a>
