@@ -11,15 +11,15 @@ class ControllerCategory implements Controller {
         $category = new Category;
         $data["categories"] = $category->read();
         
-        Twig::render("category/category-index.php", $data);
+        Twig::render("category/index.php", $data);
     }
 
     /**
      * afficher formulaire créer
      */
     public function create() {
-        if(!isset($_SESSION["fingerPrint"]) || $_SESSION["name"] != "root") RequirePage::redirect("error");
-        else Twig::render("category/category-create.php");
+        CheckSession::sessionAuth(2);
+        Twig::render("category/create.php");
     }
 
     /**
@@ -50,7 +50,7 @@ class ControllerCategory implements Controller {
         $category = new Category;
         $data["category"] = $category->readId($id);
         
-        Twig::render("category/category-edit.php", $data);
+        Twig::render("category/edit.php", $data);
         
     }
 
@@ -58,13 +58,12 @@ class ControllerCategory implements Controller {
      * enregistrer une nouvelle entrée dans la DB
      */
     public function store() {
-        if(!isset($_POST["category"])) RequirePage::redirect("error");
-        else {
-            $category = new Category;
-            $categoryId = $category->create($_POST);
+        if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
+        
+        $category = new Category;
+        $category->create($_POST);
 
-            RequirePage::redirect("category");
-        }
+        RequirePage::redirect("category"); 
     }
 
     /**
