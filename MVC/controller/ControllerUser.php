@@ -73,6 +73,13 @@ class ControllerUser implements Controller {
         if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
 
         $user = new User;
+        $where["target"] = "email";
+        $where["value"] = $_POST["email"];
+        $exist = $user->ReadWhere($where);
+        $data["error"] = "email already exists";
+        if($exist) Twig::render("login/index.php", $data);
+
+        $user = new User;
         $salt = "7dh#9fj0K";
         $_POST["password"] = password_hash($_POST["password"] . $salt, PASSWORD_BCRYPT);
         $userId = $user->create($_POST);
@@ -90,6 +97,15 @@ class ControllerUser implements Controller {
         $data["success"] = "account created, please log in";
         if(isset($_SESSION["fingerprint"])) RequirePage::redirect("panel");
         else Twig::render("login/index.php", $data);
+    }
+
+    public function userVerify($email) {
+        $user = new User;
+        $where["target"] = "email";
+        $where["value"] = $email;
+        $exist = $user->ReadWhere($where);
+        if($exist) return false;
+        else return true;
     }
 
     /**
