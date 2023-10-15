@@ -24,16 +24,20 @@
         <h2>Create account</h2>
         <form action="{{ path }}user/store" method="post">
             <label>Name:
-                <input type="text" name="name" required>
+                <input type="text" name="name" value="{{ user.name }}" required>
+                <span>{{ errors.name }}</span>
             </label>
             <label>Address:
-                <input type="text" name="address">
+                <input type="text" name="address" value="{{ user.address }}">
+                <span>{{ errors.address }}</span>
             </label>
             <label>Email:
-                <input type="text" name="email" placeholder="valid email address" required>
+                <input type="text" name="email" placeholder="valid email address" value="{{ user.email }}" required>
+                <span>{{ errors.email }}</span>
             </label>
             <label>Password:
                 <input type="password" name="password" placeholder="6-20 char.(A-z AND 0-9)" minlength="8" required>
+                <span>{{ errors.password }}</span>
             </label>
             <input type="hidden" name="privilege_id" value="3">
             <input type="submit" value="create" class="button">

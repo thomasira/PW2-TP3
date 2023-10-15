@@ -2,28 +2,33 @@
 
 <main>
     <header>
-<!--     {% if staff %}
-    {% elseif customer %}
-    {% endif %} -->
         <h2>Create {{ customer ? "Customer" : "Staff"}}</h2>
     </header>
+{% if error %} 
+    <p class="error">{{ error }}</p>
+{% endif %}
     <section>
        <form action="{{ path }}user/store" method="post">
         <label>Name
-            <input type="text" name="name" required>
+            <input type="text" name="name" value="{{ user.name }}" required>
+            <span>{{ errors.name }}</span>
         </label>
         <label>Email
-            <input type="email" name="email" required>
+            <input type="email" name="email" value="{{ user.email }}" required>
+            <span>{{ errors.email }}</span>
         </label>
         <label>Password(at least 8 car.)
             <input type="password" name="password" required>
+            <span>{{ errors.password }}</span>
         </label>
         <label>Address
-            <input type="text" name="address">
+            <input type="text" name="address" value="{{ user.address }}">
+            <span>{{ errors.address }}</span>
         </label>
     {% if staff %}
         <label>N.A.S
             <input type="text" name="nas" required>
+            <span>{{ errors.nas }}</span>
         </label>
         <label>Privilege
             <select name="privilege_id">

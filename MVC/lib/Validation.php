@@ -35,7 +35,8 @@
             'date_ymd'      => '[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}',
             'data_mdy'      => '[0-9]{1,2}\-[0-9]{1,2}\-[0-9]{4}',
             'email'         => '[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})',
-            'year'          => '^\d{4}$'
+            'year'          => '^\d{4}$',
+            'no_space'      => '^[^\s-]*$'
         );
 
         /**
@@ -254,6 +255,7 @@
          */
         public function isSuccess(){
             if(empty($this->errors)) return true;
+            else return false;
         }
 
         /**

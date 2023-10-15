@@ -169,7 +169,7 @@ class ControllerStamp implements Controller {
         $val->name("origin")->value($origin)->max(45)->pattern("alpha");
         if($year != 0) $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
         foreach($new_categories as $index => $new_category) {
-           $val->name("categories_$index")->value($new_category)->max(45);
+           $val->name("categories_$index")->value($new_category)->min(3)->max(45);
         }
 
         if($val->isSuccess()) {

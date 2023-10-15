@@ -18,22 +18,6 @@ class ControllerUser implements Controller {
         Twig::render("user/user-index.php", $data);
     }
 
-    /**
-     * afficher le formulaire créer
-     */
-/*     public function create() {
-        if(CheckSession::sessionAuth() == 1) {
-            $privilege = new Privilege;
-            $data["privileges"] = $privilege->read();
-
-            Twig::render("user/user-create.php", $data);
-
-        } else RequirePage::redirect("error");
-    } */
-
-    /**
-     * supprimer une entrée de la DB et supprimer les entrées associées de la DB
-     */
     public function delete() {
         if(!isset($_POST["id"])) {
             RequirePage::redirect("error");
@@ -43,7 +27,7 @@ class ControllerUser implements Controller {
             else $id = $_SESSION["id"];
 
             $stamp = new Stamp;
-            $where = ["target" => "user_id", "value" => $id];
+            $where = ["target" => "customer_user_id", "value" => $id];
             $stamps = $stamp->readWhere($where);
 
             if($stamps) {
@@ -58,10 +42,10 @@ class ControllerUser implements Controller {
             }
             $user = new User;
             $user->delete($id);
-            if($_SESSION["name"] != "root") {
+            if($_SESSION["privilege_id"] == 3) {
                 session_destroy();
                 RequirePage::redirect("user");
-            } elseif($_SESSION["name"] == "root") RequirePage::redirect("panel");
+            } elseif($_SESSION["privilege_id"] > 2) RequirePage::redirect("panel");
         }
     }
     
@@ -72,40 +56,63 @@ class ControllerUser implements Controller {
     public function store() {
         if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
 
-        $user = new User;
-        $where["target"] = "email";
-        $where["value"] = $_POST["email"];
-        $exist = $user->ReadWhere($where);
-        $data["error"] = "email already exists";
-        if($exist) Twig::render("login/index.php", $data);
+        if($_POST["privilege_id"] < 3) $data["staff"] = true;
+        else $data["customer"] = true;
 
-        $user = new User;
-        $salt = "7dh#9fj0K";
-        $_POST["password"] = password_hash($_POST["password"] . $salt, PASSWORD_BCRYPT);
-        $userId = $user->create($_POST);
+        RequirePage::library("Validation");
+        $val = new Validation;
 
-        if($_POST["privilege_id"] < 3) {
-            $staff = new Staff;
-            $_POST["user_id"] = $userId;
-            $staff->create($_POST);
+        extract($_POST);
+        $val->name("name")->value($name)->min(4)->max(45)->required();
+        $val->name("email")->value($email)->pattern("email")->max(45)->required();
+        $val->name("password")->value($password)->min(8)->max(20)->pattern("no_space")->required();
+        $val->name("address")->value($address)->max(100);
+        if(isset($nas)) $val->name("nas")->value($nas)->max(45)->required();
+
+        if($val->isSuccess()) {
+            //vérifier si email existe dans la DB
+            $user = new User;
+            $where["target"] = "email";
+            $where["value"] = $email;
+            $exist = $user->ReadWhere($where);
+            if($exist) {
+                $data["error"] = "email already exists";
+                if(isset($_SESSION["fingerprint"])) Twig::render("user/create.php", $data);
+                else Twig::render("login/index.php", $data);
+                exit();
+            }
+
+            //créer utilisateur
+            $user = new User;
+            $salt = "7dh#9fj0K";
+            $_POST["password"] = password_hash($_POST["password"] . $salt, PASSWORD_BCRYPT);
+            $userId = $user->create($_POST);
+
+            //créer employé
+            if($_POST["privilege_id"] < 3) {
+                $staff = new Staff;
+                $_POST["user_id"] = $userId;
+                $staff->create($_POST);
+            }
+            //créer customer
+            if($_POST["privilege_id"] == 3) {
+                $customer = new Customer;
+                $_POST["user_id"] = $userId;
+                $customer->create($_POST);
+            }
+
+            //message custom ou panel si la requête est faite à l'interne(employé seulement)
+            $data["success"] = "account created, please log in";
+            if(isset($_SESSION["fingerprint"])) RequirePage::redirect("panel");
+            else Twig::render("login/index.php", $data);
+
+        } else {
+            $data["errors"] = $val->getErrors();
+            $data["user"] = $_POST;
+
+            if(isset($_SESSION["fingerprint"])) Twig::render("user/create.php", $data);
+            else Twig::render("login/index.php", $data);
         }
-        if($_POST["privilege_id"] == 3) {
-            $customer = new Customer;
-            $_POST["user_id"] = $userId;
-            $customer->create($_POST);
-        }
-        $data["success"] = "account created, please log in";
-        if(isset($_SESSION["fingerprint"])) RequirePage::redirect("panel");
-        else Twig::render("login/index.php", $data);
-    }
-
-    public function userVerify($email) {
-        $user = new User;
-        $where["target"] = "email";
-        $where["value"] = $email;
-        $exist = $user->ReadWhere($where);
-        if($exist) return false;
-        else return true;
     }
 
     /**

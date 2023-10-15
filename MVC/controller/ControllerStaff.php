@@ -2,8 +2,11 @@
 RequirePage::model("Staff");
 RequirePage::model("Privilege");
 
-
 class ControllerStaff implements Controller {
+
+    public function __construct() {
+        CheckSession::sessionAuth(2);
+    }
 
     public function index() {
         $staff = new Staff;

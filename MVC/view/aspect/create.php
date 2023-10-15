@@ -6,7 +6,8 @@
     <section>
        <form action="{{ path }}aspect/store" method="post">
         <label>Aspect name
-            <input type="text" name="aspect" required>
+            <input type="text" name="aspect" value="{{ aspect.aspect }}" required>
+            <span>{{ errors.aspect }}</span>
         </label>
         <input type="submit" value="create" class="button">
        </form>

@@ -16,66 +16,68 @@ class ControllerAspect implements Controller {
      */
     public function create() {
         CheckSession::sessionAuth(2);
-        Twig::render("aspect/aspect-create.php");
+        Twig::render("aspect/create.php");
     }
 
     /**
      * mettre à jour les étampes qui partagent la clé($id) et supprimer l'aspect
      */
     public function delete() {
-        if(!isset($_SESSION["fingerPrint"]) ||
-        $_SESSION["name"] != "root" ||
-        !isset($_POST["id"])) {
-            RequirePage::redirect("error");
-        } else {
-            $id = $_POST["id"];
-
-            $stamp = new Stamp;
-            $where["target"] = "aspect_id";
-            $where["value"] = $id;
-            $stamps = $stamp->readWhere($where);
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
+            exit();
+        }
+        $id = $_POST["id"];
+        $stamp = new Stamp;
+        $where["target"] = "aspect_id";
+        $where["value"] = $id;
+        $stamps = $stamp->readWhere($where);
+        if($stamps) {
             foreach($stamps as $stamp) {
                 $data["aspect_id"] = null;
                 $data["id"] = $stamp["id"];
                 $stamp = new Stamp;
                 $stamp->update($data);
             }
-
-            $aspect = new Aspect;
-            $aspect->delete($id);
-
-            RequirePage::redirect("panel");
         }
+        $aspect = new Aspect;
+        $aspect->delete($id);
+        RequirePage::redirect("panel");
     }
 
     /**
-     * afficher le formualire mettre à jour
+     * afficher le formulaire mettre à jour
      */
     public function edit() {
-        if(!isset($_SESSION["fingerPrint"]) ||
-        $_SESSION["name"] != "root" ||
-        !isset($_POST["id"])) {
-            RequirePage::redirect("error");
-        } else {
-            $id = $_POST["id"];
-
-            $aspect = new Aspect;
-            $data["aspect"] = $aspect->readId($id);
-
-            Twig::render("aspect/aspect-edit.php", $data);
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
+            exit();
         }
+        $id = $_POST["id"];
+        $aspect = new Aspect;
+        $data["aspect"] = $aspect->readId($id);
+        Twig::render("aspect/edit.php", $data);
     }
 
     /**
      * enregistrer une nouvelle entrée dans la DB
      */
     public function store() {
-        if(!isset($_POST["aspect"])) RequirePage::redirect("error");
-        else {
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
+            exit();
+        }
+
+        $result = $this->validate();
+
+        if($result->isSuccess()) {
             $aspect = new Aspect;
             $aspect->create($_POST);
-
             RequirePage::redirect("panel");
+        } else {
+            $data["aspect"] = $_POST;
+            $data["errors"] = $result->getErrors();
+            Twig::render("aspect/create.php", $data);
         }
     }
 
@@ -83,12 +85,35 @@ class ControllerAspect implements Controller {
      * mettre à jour l'entrée dans la DB
      */
     public function update() {
-        if(!isset($_POST["aspect"])) RequirePage::redirect("error");
-        else {
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
+            exit();
+        }
+
+        $result = $this->validate();
+        
+        if($result->isSuccess()) {
             $aspect = new Aspect;
             $aspect->update($_POST);
-            
             RequirePage::redirect("panel");
+        } else {
+            $data["aspect"] = $_POST;
+            $data["errors"] = $result->getErrors();
+            Twig::render("aspect/edit.php", $data);
         }
+    }
+
+    public function Validate() {
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            requirePage::redirect("error");
+            exit();
+        }
+        RequirePage::library("Validation");
+        $val = new Validation;
+
+        extract($_POST);
+        $val->name("aspect")->value($aspect)->min(3)->max(45)->required();
+
+        return $val;
     }
 }
