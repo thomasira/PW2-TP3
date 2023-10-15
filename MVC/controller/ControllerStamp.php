@@ -160,14 +160,14 @@ class ControllerStamp implements Controller {
 
         //all other fields validation
 
-        if($_POST["year"] != null) $_POST["year"] = intval($_POST["year"]);
+        $_POST["year"] = intval($_POST["year"]);
         $currentYear = date("Y");
 
         extract($_POST);
         $val->name("name")->value($name)->min(4)->max(45)->required();
         $val->name("description")->value($description)->max(300);
         $val->name("origin")->value($origin)->max(45)->pattern("alpha");
-        if($year != null) $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
+        if($year != 0) $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
         foreach($new_categories as $index => $new_category) {
            $val->name("categories_$index")->value($new_category)->max(45);
         }
