@@ -144,7 +144,7 @@ class ControllerStamp implements Controller {
 
         RequirePage::library("Validation");
         $val = new Validation;
-        
+
         //image validation
         if(!empty($_FILES["image_link"]["name"])) {
             if($_FILES["image_link"]["error"] == 1) $val->errors["image_link"] = "L'image est trop grande, svp vous limitez à 2MB";
@@ -160,16 +160,14 @@ class ControllerStamp implements Controller {
 
         //all other fields validation
 
+        if($_POST["year"] != null) $_POST["year"] = intval($_POST["year"]);
+        $currentYear = date("Y");
 
         extract($_POST);
-        $val->name("name")->value($name)->min(4)->max(45)->pattern("words")->required();
+        $val->name("name")->value($name)->min(4)->max(45)->required();
         $val->name("description")->value($description)->max(300);
         $val->name("origin")->value($origin)->max(45)->pattern("alpha");
-        if($year != null) {
-            $currentYear = date("Y");
-            $year = intval($year);
-            $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
-        }
+        if($year != null) $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
         foreach($new_categories as $index => $new_category) {
            $val->name("categories_$index")->value($new_category)->max(45);
         }
