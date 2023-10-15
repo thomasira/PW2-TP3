@@ -7,16 +7,20 @@
     <form action="{{ path }}stamp/store" method="post" class="form-stamp" enctype="multipart/form-data">
         <section>
             <label>Name:
-                <input type="text" name="name" required>
+                <input type="text" name="name" value="{{ stamp.name }}" required>
+                <span>{{ errors.name }}</span>
             </label>
             <label>Origin:
-                <input type="text" name="origin">
+                <input type="text" name="origin" value="{{ stamp.origin }}">
+                <span>{{ errors.origin }}</span>
             </label>
             <label>Year:
-                <input type="year" name="year">
+                <input type="year" name="year" value="{{ stamp.year }}">
+                <span>{{ errors.year }}</span>
             </label>
             <label>Image: 
-                <input type="file" accept="image/*" name="stampUpload">
+                <input type="file" accept="image/*" name="image_link">
+                <span>{{ errors.image_link }}</span>
             </label>
             
             </label>
@@ -28,7 +32,7 @@
                 </select>
             </label>
             <label>description:
-                <textarea name="description" cols="30" rows="10"></textarea>
+                <textarea name="description" cols="30" rows="10">{{ stamp.description }}</textarea>
             </label>
             {% if session.privilege_id < 3 %}
             <label>User
@@ -48,7 +52,7 @@
             <div>
                 <h4>choose from our categories</h4>
                 <div>
-                    {% for category in categories%}
+                    {% for category in categories %}
                     <input type="checkbox" id="category_id[{{ category.id }}]" name="category_id[{{ category.id }}]" value="1">
                     <label for="category_id[{{ category.id }}]" class="item-category">{{ category.category }}</label>
                     {% endfor%}
@@ -57,19 +61,20 @@
             <div>
                 <h4>And/Or add your own categories(up to 5, you can add more by editing your stamps)</h4>
                 <label>
-                    <input type="text" name="new_categories[0]">
+                    <input type="text" name="new_categories[0]" value="{{ stamp.new_categories[0] }}">
+                    <span>{{ errors.categories_0 }}</span>
                 </label>
                 <label>
-                    <input type="text" name="new_categories[1]">
+                    <input type="text" name="new_categories[1]" value="{{ stamp.new_categories[1] }}">
                 </label>
                 <label>
-                    <input type="text" name="new_categories[2]">
+                    <input type="text" name="new_categories[2]" value="{{ stamp.new_categories[2] }}">
                 </label>
                 <label>
-                    <input type="text" name="new_categories[3]">
+                    <input type="text" name="new_categories[3]" value="{{ stamp.new_categories[3] }}">
                 </label>
                 <label>
-                    <input type="text" name="new_categories[4]">
+                    <input type="text" name="new_categories[4]" value="{{ stamp.new_categories[4] }}">
                 </label>
             </div>
         </section>

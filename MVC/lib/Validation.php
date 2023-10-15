@@ -10,8 +10,10 @@
      * @license https://github.com/davidecesarano/Validation/blob/master/LICENSE MIT License
      * @link https://github.com/davidecesarano/Validation
      */
-
+    
+    #[AllowDynamicProperties]
     class Validation {
+        public $CurrentYear = "";
 
         /**
          * @var array $patterns
@@ -32,7 +34,8 @@
             'date_dmy'      => '[0-9]{1,2}\-[0-9]{1,2}\-[0-9]{4}',
             'date_ymd'      => '[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}',
             'data_mdy'      => '[0-9]{1,2}\-[0-9]{1,2}\-[0-9]{4}',
-            'email'         => '[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})'
+            'email'         => '[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})',
+            'year'          => '^\d{4}$'
         );
 
         /**
@@ -154,7 +157,7 @@
             }else{
 
                 if($this->value < $length){
-                    $this->errors[$this->name] = 'La valeur du champ '.$this->name.' est inférieur à la valeur minimale';
+                    $this->errors[$this->name] = "L'année ".$this->name." est impossible";
                 }
 
             }
@@ -180,7 +183,7 @@
             }else{
 
                 if($this->value > $length){
-                    $this->errors[$this->name] = 'La valeur du champ '.$this->name.' est supérieur à la valeur maximale';
+                    $this->errors[$this->name] =  "L'année ".$this->name." est impossible";
                 }
 
             }

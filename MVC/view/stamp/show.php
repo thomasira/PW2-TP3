@@ -5,6 +5,9 @@
             <h2>{{ stamp.name }}</h2>
             <p>Customer id: {{ stamp.customer_user_id }}</p>
         </header>
+        <figure>
+            <img src="{{ path }}assets/image/{{ stamp.image_link }}" alt="">
+        </figure>
         <section>
             <div>
                 <h4>Details</h4>

@@ -8,6 +8,8 @@ require_once __DIR__ . "/lib/RequirePage.php";
 require_once __DIR__ . "/lib/Twig.php";
 require_once __DIR__ . "/lib/CheckSession.php";
 require_once __DIR__ . "/Controller/ControllerLog.php";
+require_once __DIR__ . "/lib/Validation.php";
+
 
 $log = new ControllerLog;
 $log->create();

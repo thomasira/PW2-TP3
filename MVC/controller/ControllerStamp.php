@@ -7,6 +7,7 @@ RequirePage::model("Category");
 RequirePage::model("StampCategory");
 RequirePage::model("StampArchive");
 
+
 class ControllerStamp implements Controller {
 
     /**
@@ -141,40 +142,79 @@ class ControllerStamp implements Controller {
     public function store() {
         if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
 
-        $target_dir = "assets/image/";
-        $target_file = $target_dir . basename($_FILES["stampUpload"]["name"]);
-        move_uploaded_file($_FILES["stampUpload"]["tmp_name"], $target_file);
-        die();
+        RequirePage::library("Validation");
+        $val = new Validation;
+        
+        //image validation
+        if(!empty($_FILES["image_link"]["name"])) {
+            if($_FILES["image_link"]["error"] == 1) $val->errors["image_link"] = "L'image est trop grande, svp vous limitez à 2MB";
+            elseif($_FILES["image_link"]["size"] == 0) $val->errors["image_link"] = "L'image n'est pas valide";
+            elseif(strlen($_FILES["image_link"]["name"]) > 200) $val->errors["image_link"] = "Le nom est trop grand";
+            else {
+                $target_dir = "assets/image/";
+                $target_file = $target_dir . basename($_FILES["image_link"]["name"]);
+                move_uploaded_file($_FILES["image_link"]["tmp_name"], $target_file);
+                $_POST["image_link"] = $_FILES["image_link"]["name"];
+            }
+        }
 
-        $stamp = new Stamp;
-
-        /* s'assurer que l'entrée soit INT */
-        $_POST["year"] = intval($_POST["year"]);
+        //all other fields validation
 
 
-        /*enregistrer les entrées liées à la table category et stamp_category */
-        if(isset($_POST["new_categories"])) {
-            foreach($_POST["new_categories"] as $category) {
-                if($category != "") {
-                    $data["category"] = $category;
+        extract($_POST);
+        $val->name("name")->value($name)->min(4)->max(45)->pattern("words")->required();
+        $val->name("description")->value($description)->max(300);
+        $val->name("origin")->value($origin)->max(45)->pattern("alpha");
+        if($year != null) {
+            $currentYear = date("Y");
+            $year = intval($year);
+            $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
+        }
+        foreach($new_categories as $index => $new_category) {
+           $val->name("categories_$index")->value($new_category)->max(45);
+        }
 
-                    $category = new Category;
-                    $category_id = $category->create($data);
-
-                    /*conversion de la valeur en clé, poussé dans le $_POST, utile car les autres champs recueillis sont booléens, voir plus bas */
-                    $_POST["category_id"][$category_id] = 1;
+        if($val->isSuccess()) {
+            $stamp = new Stamp;
+            $stamp_id = $stamp->create($_POST);
+    
+            /*enregistrer les entrées liées à la table category et stamp_category */
+            if(isset($_POST["new_categories"])) {
+                foreach($_POST["new_categories"] as $category) {
+                    if($category != "") {
+                        $data["category"] = $category;
+    
+                        $category = new Category;
+                        $category_id = $category->create($data);
+    
+                        /*conversion de la valeur en clé, poussé dans le $_POST, utile car les autres champs recueillis sont booléens, voir plus bas */
+                        $_POST["category_id"][$category_id] = 1;
+                    }
                 }
             }
-        }
-        $stamp_id = $stamp->create($_POST);
-        
-        if(isset($_POST["category_id"])){
-            foreach($_POST["category_id"] as $category_id => $category){
-                $stampCategory = new StampCategory;
-                $stampCategory->create([ "stamp_id" => $stamp_id, "category_id" => $category_id]);
+            if(isset($_POST["category_id"])) {
+                foreach($_POST["category_id"] as $category_id => $category){
+                    $stampCategory = new StampCategory;
+                    $stampCategory->create([ "stamp_id" => $stamp_id, "category_id" => $category_id]);
+                }
             }
-        }
-        RequirePage::redirect('stamp/show/'. $stamp_id);
+            RequirePage::redirect('stamp/show/'. $stamp_id);
+
+        } else {
+            $aspect = new Aspect;
+            $data["aspects"] = $aspect->read();
+    
+            $category = new Category;
+            $data["categories"] = $category->read();
+    
+            $customer = new Customer;
+            $data["customers"] = $customer->read();
+
+            $data["stamp"] = $_POST;
+            $data["errors"] = $val->getErrors();
+
+            Twig::render("stamp/create.php", $data);
+        } 
     }
 
     /**
