@@ -108,7 +108,7 @@ class ControllerCategory implements Controller {
         if($exist) $val->errors["exist"] = "category already exists";
         
         extract($_POST);
-        $val->name("category")->value($category)->min(3)->max(45)->required();
+        $val->name("category")->value($category)->max(45);
 
         return $val;
     }

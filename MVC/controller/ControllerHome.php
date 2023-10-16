@@ -17,8 +17,6 @@ class ControllerHome implements Controller {
      * afficher page erreur
      */
     public function error() {
-
         Twig::render("error.php");
-        exit();
     }
 }

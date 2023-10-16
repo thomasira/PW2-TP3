@@ -19,13 +19,15 @@ class ControllerUser implements Controller {
     }
 
     public function delete() {
-        if(!isset($_POST["id"])) {
-            RequirePage::redirect("error");
+        if($_SERVER["REQUEST_METHOD"] != "POST"){
+            requirePage::redirect("error");
+            exit();
         } else {
             $id;
-            if($_SESSION["name"] == "root") $id = $_POST["id"];
+            if($_SESSION["privilege_id"] < 2) $id = $_POST["id"];
             else $id = $_SESSION["id"];
 
+            
             $stamp = new Stamp;
             $where = ["target" => "customer_user_id", "value" => $id];
             $stamps = $stamp->readWhere($where);
@@ -54,22 +56,17 @@ class ControllerUser implements Controller {
      * enregistrer une entrée dans la DB
      */
     public function store() {
-        if($_SERVER["REQUEST_METHOD"] != "POST") requirePage::redirect("error");
+        if($_SERVER["REQUEST_METHOD"] != "POST"){
+            requirePage::redirect("error");
+            exit();
+        } 
 
         if($_POST["privilege_id"] < 3) $data["staff"] = true;
         else $data["customer"] = true;
 
-        RequirePage::library("Validation");
-        $val = new Validation;
+        $result = $this->validate();
 
-        extract($_POST);
-        $val->name("name")->value($name)->min(4)->max(45)->required();
-        $val->name("email")->value($email)->pattern("email")->max(45)->required();
-        $val->name("password")->value($password)->min(8)->max(20)->pattern("no_space")->required();
-        $val->name("address")->value($address)->max(100);
-        if(isset($nas)) $val->name("nas")->value($nas)->max(45)->required();
-
-        if($val->isSuccess()) {
+        if($result->isSuccess()) {
             //vérifier si email existe dans la DB
             $user = new User;
             $where["target"] = "email";
@@ -103,11 +100,11 @@ class ControllerUser implements Controller {
 
             //message custom ou panel si la requête est faite à l'interne(employé seulement)
             $data["success"] = "account created, please log in";
-            if(isset($_SESSION["fingerprint"])) RequirePage::redirect("panel");
+            if($_SESSION["privilege_id"] < 2) RequirePage::redirect("panel");
             else Twig::render("login/index.php", $data);
 
         } else {
-            $data["errors"] = $val->getErrors();
+            $data["errors"] = $result->getErrors();
             $data["user"] = $_POST;
 
             if(isset($_SESSION["fingerprint"])) Twig::render("user/create.php", $data);
@@ -156,33 +153,52 @@ class ControllerUser implements Controller {
      * afficher le formulaire mettre à jour
      */
     public function edit() {
+        checkSession::sessionAuth();
+
         $id;
-        if(!isset($_SESSION["fingerPrint"])){
-            Twig::render("error.php");
-            exit();
-        }
-        if($_SESSION["name"] == "root") $id = $_POST["id"];
+        if($_SESSION["privilege_id"] < 2) $id = $_POST["id"];
         else $id = $_SESSION["id"];
 
         $user = new User;
         $data["user"] = $user->readId($id);
-        Twig::render("user-edit.php", $data);
+        Twig::render("user/edit.php", $data);
     }
 
     /**
      * mettre à jour une entrée dans la DB
      */
     public function update() {
-        if(!isset($_POST["id"])) {
-            Twig::render("error.php");
+        if($_SERVER["REQUEST_METHOD"] != "POST"){
+            requirePage::redirect("error");
             exit();
+        } 
+        $result = $this->validate();
+
+        if($result->isSuccess()) {
+            $user = new User;
+            $updatedId = $user->update($_POST);
+            if($updatedId) RequirePage::redirect("customer/profile");
+            else print_r($updatedId);
+        } else {
+            $data["errors"] = $result->getErrors();
+            $data["user"] = $_POST;
+
+            Twig::render("user/edit.php", $data);
         }
-        $user = new User;
-        $updatedId = $user->update($_POST);
-        if($updatedId) {
-            RequirePage::redirect('user/profile');
-        }
-        else print_r($updatedId);
+
     }
 
+    private function validate() {
+        RequirePage::library("Validation");
+        $val = new Validation;
+
+        extract($_POST);
+        $val->name("name")->value($name)->min(4)->max(45)->required();
+        if(isset($email)) $val->name("email")->value($email)->pattern("email")->max(45)->required();
+        if(isset($password)) $val->name("password")->value($password)->min(8)->max(20)->pattern("no_space")->required();
+        $val->name("address")->value($address)->max(100);
+        if(isset($nas)) $val->name("nas")->value($nas)->max(45)->required();
+
+        return $val;
+    }
 }

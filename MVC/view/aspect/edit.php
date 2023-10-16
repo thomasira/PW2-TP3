@@ -8,7 +8,7 @@
         <input type="hidden" name="id" value="{{ aspect.id }}">
         <label>Aspect name
             <input type="text" name="aspect" value="{{ aspect.aspect }}" required>
-            <span>{{ errors.aspect }}</span>
+            <span class="error">{{ errors.aspect }}</span>
         </label>
         <input type="submit" value="update" class="button">
        </form>

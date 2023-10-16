@@ -34,7 +34,7 @@
             <li class="item-row">
                 <a href="{{ path }}customer/show/{{ customer.id }}">{{ customer.name }}</a>
                 <div>
-                    <form action="{{ path }}customer/edit" method="post">
+                    <form action="{{ path }}user/edit" method="post">
                         <input type="hidden" name="id" value="{{ customer.id }}">
                         <input type="submit" class="icon" value="&#9998;">
                     </form>
@@ -94,11 +94,11 @@
         <ul>
         {% for employee in staff %}
             <li class="item-row">
-                <a href="{{ path }}staff/show/{{ employee.id }}">{{ employee.name }}</a>
+                <h4>{{ employee.name }}</h4>
                 <p> | <strong>{{ employee.privilege }}</strong></p>
             {% if session.privilege_id == 1 %}
                 <div>
-                    <form action="{{ path }}staff/edit" method="post">
+                    <form action="{{ path }}user/edit" method="post">
                         <input type="hidden" name="id" value="{{ employee.id }}">
                         <input type="submit" class="icon" value="&#9998;">
                     </form>

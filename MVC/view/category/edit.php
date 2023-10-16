@@ -8,6 +8,7 @@
         <input type="hidden" name="id" value="{{ category.id }}">
         <label>Category name
             <input type="text" name="category" value="{{ category.category }}" required>
+            <span class="error">{{ errors.category }}</span>
         </label>
         <input type="submit" value="update" class="button">
        </form>

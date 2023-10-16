@@ -1,4 +1,10 @@
 
-.file-stamp{
-    
+.file-stamp figure{
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: cover;
+    overflow: hidden;
+}
+.file-stamp img{
+    width: 100%;
 }

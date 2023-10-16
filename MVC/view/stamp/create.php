@@ -8,19 +8,19 @@
         <section>
             <label>Name:
                 <input type="text" name="name" value="{{ stamp.name }}" required>
-                <span>{{ errors.name }}</span>
+                <span class="error">{{ errors.name }}</span>
             </label>
             <label>Origin:
                 <input type="text" name="origin" value="{{ stamp.origin }}">
-                <span>{{ errors.origin }}</span>
+                <span class="error">{{ errors.origin }}</span>
             </label>
             <label>Year:
                 <input type="year" name="year" value="{{ stamp.year }}">
-                <span>{{ errors.year }}</span>
+                <span class="error">{{ errors.year }}</span>
             </label>
             <label>Image: 
                 <input type="file" accept="image/*" name="image_link">
-                <span>{{ errors.image_link }}</span>
+                <span class="error">{{ errors.image_link }}</span>
             </label>
             
             </label>
@@ -33,6 +33,7 @@
             </label>
             <label>description:
                 <textarea name="description" cols="30" rows="10">{{ stamp.description }}</textarea>
+                <span class="error">{{ errors.description }}</span>
             </label>
             {% if session.privilege_id < 3 %}
             <label>User
@@ -62,19 +63,23 @@
                 <h4>And/Or add your own categories(up to 5, you can add more by editing your stamps)</h4>
                 <label>
                     <input type="text" name="new_categories[0]" value="{{ stamp.new_categories[0] }}">
-                    <span>{{ errors.categories_0 }}</span>
+                    <span class="error">{{ errors.categories_0 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[1]" value="{{ stamp.new_categories[1] }}">
+                    <span class="error">{{ errors.categories_1 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[2]" value="{{ stamp.new_categories[2] }}">
+                    <span class="error">{{ errors.categories_2 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[3]" value="{{ stamp.new_categories[3] }}">
+                    <span class="error">{{ errors.categories_3 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[4]" value="{{ stamp.new_categories[4] }}">
+                    <span class="error">{{ errors.categories_4 }}</span>
                 </label>
             </div>
         </section>

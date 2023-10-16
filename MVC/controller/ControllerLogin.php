@@ -13,7 +13,8 @@ class ControllerLogin implements Controller {
 
     public function auth() {
         $user = new User;
-        $where = ["target" => "email", "value" => $_POST["email"]];
+        $where["target"] = "email";
+        $where["value"] = $_POST["email"];
         $readUser = $user->readWhere($where);
 
         if(!$readUser) {

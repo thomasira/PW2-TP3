@@ -7,7 +7,7 @@
        <form action="{{ path }}category/store" method="post">
         <label>Category name
             <input type="text" name="category" value="{{ category.category }}" required>
-            <span>{{ errors.category }} {{ errors.exist}}</span>
+            <span class="error">{{ errors.category }} {{ errors.exist}}</span>
         </label>
         <input type="submit" value="create" class="button">
        </form>

@@ -4,16 +4,19 @@
     <header>
         <h2>Edit Stamp</h2>
     </header>
-    <form action="{{ path }}stamp/update" method="post"  class="form-stamp">
+    <form action="{{ path }}stamp/update" method="post" class="form-stamp">
         <section>
             <label>Name:
                 <input type="text" name="name" value="{{ stamp.name }}"required>
+                <span class="error">{{ errors.name }}</span>
             </label>
             <label>Origin:
                 <input type="text" name="origin" value="{{ stamp.origin }}">
+                <span class="error">{{ errors.origin }}</span>
             </label>
             <label>Year:
                 <input type="year" name="year" value="{{ stamp.year }}">
+                <span class="error">{{ errors.year }}</span>
             </label>
             </label>
             <label>Aspect:
@@ -29,12 +32,13 @@
             </label>
             <label>description:
                 <textarea name="description" cols="30" rows="10">{{ stamp.description }}</textarea>
+                <span class="error">{{ errors.description }}</span>
             </label>
-            {% if session_user.name == 'root' %}
+            {% if session.privilege_id < 2 %}
             <label>User
-                <select name="user_id">
-                {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.name }}</option>
+                <select name="customer_user_id">
+                {% for customer in customers %}
+                        <option value="{{ customer.user_id }}">{{ customer.name }}</option>
                 {% endfor %}
                 </select>
             </label>
@@ -60,18 +64,23 @@
 
                 <label>
                     <input type="text" name="new_categories[0]">
+                    <span class="error">{{ errors.categories_0 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[1]">
+                    <span class="error">{{ errors.categories_1 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[2]">
+                    <span class="error">{{ errors.categories_2 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[3]">
+                    <span class="error">{{ errors.categories_3 }}</span>
                 </label>
                 <label>
                     <input type="text" name="new_categories[4]">
+                    <span class="error">{{ errors.categories_4 }}</span>
                 </label>
             </div>
         </section>

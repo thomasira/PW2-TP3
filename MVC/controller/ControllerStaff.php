@@ -1,5 +1,6 @@
 <?php
 RequirePage::model("Staff");
+RequirePage::model("User");
 RequirePage::model("Privilege");
 
 class ControllerStaff implements Controller {
@@ -25,5 +26,20 @@ class ControllerStaff implements Controller {
         $data["privileges"] = $privilege->read();
         $data["staff"] = true;
         Twig::render("user/create.php", $data);
+    }
+
+    public function delete() {
+        if($_SERVER["REQUEST_METHOD"] != "POST"){
+            requirePage::redirect("error");
+            exit();
+        } else {
+            CheckSession::sessionAuth(1);
+            $id = $_POST["id"];
+            $staff = new Staff;
+            $staff->delete($id);
+            $user = new User;
+            $user->delete($id);
+            RequirePage::redirect("panel");
+        }
     }
 }

@@ -60,7 +60,7 @@ class ControllerStamp implements Controller {
 
         $stamp->delete($stamp_id);
 
-        RequirePage::redirect("stamp");
+        RequirePage::redirect("customer/profile");
     }
 
     /**
@@ -82,9 +82,8 @@ class ControllerStamp implements Controller {
         $category = new Category;
         $data["categories"] = $category->read();
 
-        $user = new User;
-        $data["users"] = $user->read();
-
+        $customer = new Customer;
+        $data["customers"] = $customer->read();
 
         $data["stamp"] = $stamp->readId($id);
         $stampCategories = new StampCategory;
@@ -160,27 +159,17 @@ class ControllerStamp implements Controller {
 
         //all other fields validation
 
-        $_POST["year"] = intval($_POST["year"]);
-        $currentYear = date("Y");
+        $result = $this->validate();
 
-        extract($_POST);
-        $val->name("name")->value($name)->min(4)->max(45)->required();
-        $val->name("description")->value($description)->max(300);
-        $val->name("origin")->value($origin)->max(45)->pattern("alpha");
-        if($year != 0) $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
-        foreach($new_categories as $index => $new_category) {
-           $val->name("categories_$index")->value($new_category)->min(3)->max(45);
-        }
-
-        if($val->isSuccess()) {
+        if($result->isSuccess()) {
             $stamp = new Stamp;
             $stamp_id = $stamp->create($_POST);
     
             /*enregistrer les entrées liées à la table category et stamp_category */
             if(isset($_POST["new_categories"])) {
-                foreach($_POST["new_categories"] as $category) {
-                    if($category != "") {
-                        $data["category"] = $category;
+                foreach($_POST["new_categories"] as $new_category) {
+                    if($new_category != "") {
+                        $data["category"] = $new_category;
     
                         $category = new Category;
                         $category_id = $category->create($data);
@@ -191,7 +180,7 @@ class ControllerStamp implements Controller {
                 }
             }
             if(isset($_POST["category_id"])) {
-                foreach($_POST["category_id"] as $category_id => $category){
+                foreach($_POST["category_id"] as $category_id => $category) {
                     $stampCategory = new StampCategory;
                     $stampCategory->create([ "stamp_id" => $stamp_id, "category_id" => $category_id]);
                 }
@@ -209,7 +198,7 @@ class ControllerStamp implements Controller {
             $data["customers"] = $customer->read();
 
             $data["stamp"] = $_POST;
-            $data["errors"] = $val->getErrors();
+            $data["errors"] = $result->getErrors();
 
             Twig::render("stamp/create.php", $data);
         } 
@@ -223,37 +212,75 @@ class ControllerStamp implements Controller {
             RequirePage::redirect("error");
             exit();
         }
-        $stamp_id = $_POST["id"];
-        $stampCategories = new StampCategory;
-        $stampCategories->deleteStampCat($stamp_id);
+        $result = $this->validate();
 
-        /*enregistrer les entrées liées à la table category et stamp_category */
-        if(isset($_POST["new_categories"])) {
-            foreach($_POST["new_categories"] as $category) {
-                if($category != "") {
-                    $data["category"] = $category;
-
-                    $category = new Category;
-                    $category_id = $category->create($data);
-
-                    $_POST["category_id"][$category_id] = 1;
+        if($result->isSuccess()) {
+            $stamp_id = $_POST["id"];
+            $stampCategories = new StampCategory;
+            $stampCategories->deleteStampCat($stamp_id);
+    
+    
+            /*enregistrer les entrées liées à la table category et stamp_category */
+            if(isset($_POST["new_categories"])) {
+                foreach($_POST["new_categories"] as $category) {
+                    if($category != "") {
+                        $data["category"] = $category;
+    
+                        $category = new Category;
+                        $category_id = $category->create($data);
+    
+                        $_POST["category_id"][$category_id] = 1;
+                    }
                 }
             }
-        }
-        if(isset($_POST["category_id"])){
-            foreach($_POST["category_id"] as $category_id => $category){
-                $stampCategory = new StampCategory;
-                $stampCategory->create([ "stamp_id" => $stamp_id, "category_id" => $category_id]);
+            if(isset($_POST["category_id"])){
+                foreach($_POST["category_id"] as $category_id => $category){
+                    $stampCategory = new StampCategory;
+                    $stampCategory->create([ "stamp_id" => $stamp_id, "category_id" => $category_id]);
+                }
             }
-        }
-        
-        $stamp = new stamp;
+            $stamp = new stamp;
+            $_POST["year"] = intval($_POST["year"]);
+            $updatedId = $stamp->update($_POST);
+            RequirePage::redirect("stamp/show/$updatedId");
+        } else {
+            $aspect = new Aspect;
+            $data["aspects"] = $aspect->read();
+    
+            $category = new Category;
+            $data["categories"] = $category->read();
+    
+            $customer = new Customer;
+            $data["customers"] = $customer->read();
+
+            $data["stamp"] = $_POST;
+            $data["errors"] = $result->getErrors();
+
+            Twig::render("stamp/edit.php", $data);
+        } 
+    }
+
+    private function validate() {
+        RequirePage::library("Validation");
+        $val = new Validation;
+
         $_POST["year"] = intval($_POST["year"]);
-        $updatedId = $stamp->update($_POST);
-        if($updatedId) {
-            RequirePage::redirect("stamp/show/$stamp_id");
+        $currentYear = date("Y");
+
+        extract($_POST);
+        $val->name("name")->value($name)->min(4)->max(45)->required();
+        $val->name("description")->value($description)->max(300);
+        $val->name("origin")->value($origin)->max(45)->pattern("alpha");
+        if($year != 0) $val->name("year")->value($year)->pattern("year")->min(1840)->max($currentYear);
+        foreach($new_categories as $index => $new_category) {
+           $val->name("categories_$index")->value($new_category)->max(45);
+           $category = new Category;
+           $where["target"] = "category";
+           $where["value"] = $new_category;
+           $exist = $category->ReadWhere($where);
+           if($exist) $val->errors["categories_$index"] = "category already exists";
         }
-        else print_r($updatedId);
+        return $val;
     }
 
 }

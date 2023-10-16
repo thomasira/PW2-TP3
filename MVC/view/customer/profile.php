@@ -2,8 +2,8 @@
 <main>
     <article class="profile-user">
         <header>
-            <h2>{{ user.name }}</h2>
-            <p>user id: {{ user.id }}</p>
+            <h2>{{ customer.name }}</h2>
+            <p>customer id: {{ customer.user_id }}</p>
         </header>
         <section>
             <h3>My stamps</h3>
@@ -29,7 +29,7 @@
         <section>
             <a href="{{ path }}user/edit" class="button">modify info</a>
             <form action="{{ path }}user/delete" method="post">
-                <input type="hidden" name="id" value="{{ user.id }}">
+                <input type="hidden" name="id" value="{{ customer.user_id }}">
                 <input type="submit" class="button warning" value="delete account">
             </form>
         </section>

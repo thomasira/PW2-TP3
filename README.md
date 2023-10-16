@@ -1,10 +1,11 @@
 
-# Projet site de timbre V2
+# Projet site de timbre V3 | PW2-TP3
 
 Thomas Aucoin-Lo  
 e2395387
 
 > ### index
+> * [Mises à jour](#mises-à-jour)
 > * [Notes](#Notes)
 > * [Liens](#Liens)
 > * [Résumé](#Résumé)
@@ -15,7 +16,19 @@ e2395387
 > * [Architecture](#Sur-larchitecture-du-projet)
 > * [Script php](#Sur-le-script-php)
 
+
+## Mises à jour 
+
+> ### TP3 | 10/16/2023
+> * nouvelle structure de DB
+
+
+
 ## Notes
+
+pas de protection sur nas(exemple)
+pas de suppression d'image du dossier
+
 
 3 niveaux d'accès sont possibles, soit 1->super-admin, 2->admin, 3->customer. Ils ont chacuns leurs propres accès, il est donc nécéssaire de se connecter au trois niveaux pour voir tout le projet.  
 **voir niveaux d'accès pour plus de détails*
