@@ -18,9 +18,11 @@ input, textarea{
     padding: var(--padSmlst);
 }
 li{
-
     list-style: none;
-
+}
+th{
+    padding: var(--padSmlst) var(--padSmlr);
+    border-bottom: 1px solid white;
 }
 
 

@@ -1,0 +1,27 @@
+
+body>header{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    gap: var(--padLrg);
+    padding: var(--padSmlr);
+    background-color: var(--colorDark);
+    color: var(--colorSec);
+}
+body>header>h1{
+    font-size: var(--fontSml);
+}
+body>footer{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--padLrg);
+    padding: var(--padSmlr);
+    background-color: var(--colorDark);
+    color: var(--colorSec);
+}
+body>footer>h4{
+    font-size: var(--fontSml);
+    font-weight: normal;
+}
