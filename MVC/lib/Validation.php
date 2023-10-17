@@ -11,7 +11,7 @@
      * @link https://github.com/davidecesarano/Validation
      */
     
-    #[AllowDynamicProperties]
+    #[AllowDynamicProperties] //for php 8.2(?) and up. to allow dynamic properties
     class Validation {
         public $CurrentYear = "";
 

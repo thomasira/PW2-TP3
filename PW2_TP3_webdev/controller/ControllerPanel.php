@@ -13,7 +13,7 @@ class ControllerPanel implements Controller {
     }
     
     /**
-     * afficher l'index, requiert toutes les entrées des tables simples
+     * afficher l'index
      */
     public function index() {
 

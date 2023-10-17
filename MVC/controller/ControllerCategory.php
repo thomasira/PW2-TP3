@@ -90,8 +90,10 @@ class ControllerCategory implements Controller {
         RequirePage::redirect("panel");
     }
 
+    /**
+     * valider les entrées
+     */
     public function Validate() {
-
         if($_SERVER["REQUEST_METHOD"] != "POST") {
             requirePage::redirect("error");
             exit();

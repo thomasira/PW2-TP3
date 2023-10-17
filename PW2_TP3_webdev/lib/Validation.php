@@ -10,8 +10,10 @@
      * @license https://github.com/davidecesarano/Validation/blob/master/LICENSE MIT License
      * @link https://github.com/davidecesarano/Validation
      */
-    
-    #[AllowDynamicProperties]
+
+
+
+    #[AllowDynamicProperties] //for php 5(?) and up. to allow dynamic properties
     class Validation {
         public $CurrentYear = "";
 

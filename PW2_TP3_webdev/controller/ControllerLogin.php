@@ -11,6 +11,9 @@ class ControllerLogin implements Controller {
         else RequirePage::redirect("error");
     }
 
+    /**
+     * authentifier la connexion
+     */
     public function auth() {
         $user = new User;
         $where["target"] = "email";

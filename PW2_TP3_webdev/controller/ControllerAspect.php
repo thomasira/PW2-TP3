@@ -5,14 +5,14 @@ RequirePage::model("Stamp");
 class ControllerAspect implements Controller {
     
     /**
-     * rediriger ver la page index. Aurait pu ne pas implementer l'interface Controller aussi
+     * rediriger ver la page error
      */
     public function index() {
         RequirePage::redirect("error");
     }
 
     /**
-     * valider utilisateur et afficher le formulaire créer
+     * afficher le formulaire créer
      */
     public function create() {
         CheckSession::sessionAuth(2);
@@ -103,6 +103,9 @@ class ControllerAspect implements Controller {
         }
     }
 
+    /**
+     * valider les entrées
+     */
     private function Validate() {
         RequirePage::library("Validation");
         $val = new Validation;

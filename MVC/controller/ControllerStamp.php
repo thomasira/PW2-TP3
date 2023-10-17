@@ -260,6 +260,9 @@ class ControllerStamp implements Controller {
         } 
     }
 
+    /**
+     * valider les entrées
+     */
     private function validate() {
         RequirePage::library("Validation");
         $val = new Validation;

@@ -8,12 +8,18 @@ RequirePage::model("Stamp");
 
 class ControllerCustomer implements Controller {
 
+    /**
+     * afficher l'index
+     */
     public function index() {
         $customer = new Customer;
         $data["customers"] = $customer->read();
         Twig::render("customer/index.php", $data);
     }
 
+    /**
+     * afficher le formulaire créer
+     */
     public function create() {
         $privilege = new Privilege;
         $data["privileges"] = $privilege->read();
@@ -21,12 +27,14 @@ class ControllerCustomer implements Controller {
         Twig::render("user/create.php", $data);
     }
 
+    /**
+     * supprimer une entrée de la DB et les étampes associées
+     */
     public function delete() {
         if($_SERVER["REQUEST_METHOD"] != "POST"){
             requirePage::redirect("error");
             exit();
         } else {
-            $id;
             if($_SESSION["privilege_id"] < 2) $id = $_POST["id"];
             else $id = $_SESSION["id"];
 
@@ -43,6 +51,9 @@ class ControllerCustomer implements Controller {
                     $stamp = new Stamp;
                     $deletedStamp = $stamp->readId($stamp_id);
 
+                    /**
+                     * créer une archive avant la suppression
+                     */
                     $stampArchive = new StampArchive;
                     $stampArchive->create($deletedStamp);
                     
@@ -61,6 +72,9 @@ class ControllerCustomer implements Controller {
         }
     }
 
+    /**
+     * afficher une entrée
+     */
     public function show($id) {
         $customer = new Customer;
         $data["customer"] = $customer->readId($id);
@@ -75,7 +89,9 @@ class ControllerCustomer implements Controller {
         Twig::render("customer/show.php", $data);
     }
 
-
+    /**
+     * afficher le profil d'un utilisateur
+     */
     public function profile() {
         checkSession::sessionAuth();
 

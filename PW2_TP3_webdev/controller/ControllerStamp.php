@@ -55,6 +55,9 @@ class ControllerStamp implements Controller {
         $stamp = new Stamp;
         $deletedStamp = $stamp->readId($stamp_id);
 
+        /**
+         * créer une archive avant la suppression
+         */
         $stampArchive = new StampArchive;
         $stampArchive->create($deletedStamp);
 
@@ -102,7 +105,7 @@ class ControllerStamp implements Controller {
                 }
             }
         }
-        /* boucler sur les aspects et "selected" le correspondant */
+        /* boucler sur les aspects et "selected" correspondant */
         foreach ($data["aspects"] as &$aspect) {
             if($data["stamp"]["aspect_id"] == $aspect["id"]) $aspect["selected"] = true;
         }
@@ -260,6 +263,9 @@ class ControllerStamp implements Controller {
         } 
     }
 
+    /**
+     * valider les entrées
+     */
     private function validate() {
         RequirePage::library("Validation");
         $val = new Validation;

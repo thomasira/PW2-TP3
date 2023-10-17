@@ -6,31 +6,33 @@ e2395387
 
 > ### index
 > * [Mises à jour](#mises-à-jour)
-> * [Notes](#Notes)
-> * [Liens](#Liens)
-> * [Résumé](#Résumé)
-> * [Connexions](#Connexions)
-> * [Diagramme](#Sur-le-diagramme-entité-relationel)
-> * [Base de données](#Sur-la-base-de-données)
-> * [Niveaux d'accès](#Sur-les-niveaux-daccès)
-> * [Architecture](#Sur-larchitecture-du-projet)
-> * [Script php](#Sur-le-script-php)
+> * [Notes](#notes)
+> * [Liens](#liens)
+> * [Résumé](#résumé)
+> * [Connexions](#connexions)
+> * [Diagramme](#sur-le-diagramme-entité-relationel)
+> * [Base de données](#sur-la-base-de-données)
+> * [Niveaux d'accès](#sur-les-niveaux-daccès)
+> * [Architecture](#sur-larchitecture-du-projet)
+> * [Script php](#sur-le-script-php)
 
 
 ## Mises à jour 
 
 > ### TP3 | 10/16/2023
-> * nouvelle structure de DB
-
-
+> * nouvelle structure de DB (voir diagram ou presentation)
+> * implémenter une journal de bord
+> * implémenter archivage des étampes
+> * implémenter importation image
+> * changer structure de niveau d'accès
 
 ## Notes
 
-pas de protection sur nas(exemple)
-pas de suppression d'image du dossier
+> #### À fixer
+> * Les images importées ne sont pas supprimer du fichier source lors de la suprresion d'une étampe
+> * Le champs *nas* ne présente aucune protection
 
-
-3 niveaux d'accès sont possibles, soit 1->super-admin, 2->admin, 3->customer. Ils ont chacuns leurs propres accès, il est donc nécéssaire de se connecter au trois niveaux pour voir tout le projet.  
+>3 niveaux d'accès sont possibles, soit 1->super-admin, 2->admin, 3->customer. Ils ont chacuns leurs propres accès, il est donc nécéssaire de se connecter au trois niveaux pour voir tout le projet.  
 **voir niveaux d'accès pour plus de détails*
 
 ## Liens  
@@ -50,30 +52,54 @@ Un site où les utilisateurs peuvent se connecter et ajouter des timbres categor
 
 ### Sur webdev:   
 
-> #### root:
+> #### super-admin:
 > * user email: root@root.com
 > * password: ***voir presentation.pdf***
 
-> #### utilisateur normal:
-> * user email: bill@bill.com
-> * password: billbill  
+> #### admin:
+> * user email: billy@billy.com
+> * password: ***voir presentation.pdf***
+
+> #### customer:
+> * user email: john@john.com
+> * password: 12345678  
 > **ou créez votre propre utilisateur*  
 
 ### Sur votre serveur:
 
-> #### root:
-> créer un utilisateur ayant comme username: **root**
-
-> #### utilisateur normal:
-> créez un utilisateur
+> * désactiver le **CheckSession::sessionAuth()** dans le constructeur du fichier *ControllerStaff*.
+> * dans l'url, inscrire après la racine: *staff/create*.
+> * créer un employé ayant le privilège *super-admin*
+> * réactiver la protection dans *ControllerStaff*
+> * à partir d'un profil super-admin, vous pouvez peupler la DB comme vous voulez.
 
 ## Sur le diagramme entité relationel
 
 **voir diagram.png ou presentation.pdf* 
 
-Le projet consiste de 5 tables, dont une où la clé est composée.
-la table aspect et user donne leur clés à la table stamp.
-la table stamp_category partage la clé composé de ces deux tables.
+Le projet consiste de 10 tables, dont une où la clé est composée et deux où la clé est étrangère et primaire.  
+
+* User -> contient les infos d'un utilisateur, passe son ID soit à Staff ou Customer
+
+* Customer -> contient les mêmes infos que User mais passe son ID à la table Stamp
+
+* Staff -> contient les mêmes infos que User + un champ pour *nas*  
+*(Ce champ sert d'exemple et n'offre aucune protection)
+
+* Privilege -> contient les 3 niveaux d'accès, passe son Id à la table User
+
+* Aspect -> contient les aspects
+
+* Category -> contient les catégories, passe son ID à la table Stamp_has_category
+
+* Stamp -> contient les infos d'un timbres, passe son ID à la table Stamp_has_category
+
+* Stamp_has_category -> contient les liens entre Stamp et Category
+
+* Log -> contient les infos d'un accès à une page
+
+* Archive -> contient un clone d'une entrée de la table Stamp  
+*(Est créée lors de la suppression d'un timbre)
 
 ## Sur la base de données   
 
@@ -81,28 +107,28 @@ la table stamp_category partage la clé composé de ces deux tables.
 **voir stampDB.sql*
 
 Les tables de la DB sont relativement lousses où la majorité des clés étrangères sont non-obligatoires.   
-Des champs ont aussi été altérés par rapport au TP1.
+Plusieurs tables ont été rajoutées pour amèliorer la gestion d'accès et l'archivage
 
 ## Sur les niveaux d'accès  
 
-### root:
+### super-admin:
 * accès à la page *panel*  
 * peut modifier, créer et supprimer toutes les tables  
 **attention:** Supprimer une entrée donnant des clés étrangères obligatoires supprimera aussi les entrées correspondantes.
 
-### utilisateur normal:
+### admin:
+* accès à la page *panel*  
+* peut modifier, créer et supprimer toutes les tables SAUF la table STAFF
+
+### customer:
 * accès à la page *profile*  
 * peut modifier, créer et supprimer les tables suivantes où le **id** visé correspont au sien:
     * user
     * stamp
 
-> #### commentaires:
-> les niveaux d'accès sont non protégées et à titre démonstratif seulement.
-
-
 ## Sur l'architecture du projet  
 
-Le projet actuel est construit suivant un modèle MVC et emploi l'API externe TWIG pour la gestion des rendus *(sauf exception)*.
+Le projet actuel est construit suivant un modèle MVC et emploi l'API externe TWIG pour la gestion des rendus.
 
 ## Sur le script php  
 
@@ -128,8 +154,6 @@ sont explicitement commentées dans le script.
 
 ## Sur la validation et la gestion d'erreurs  
 
-Une validation et gestion d'erreur et est en place sur les niveaux d'accès et sur l'url. Une petite validation est aussi en place quant à certaines données formulaires coté client.
+Une validation et gestion d'erreur et est en place sur les niveaux d'accès et sur l'url.   
+Une validation et gestion d'erreur est implémentée sur les champs uniques.  
 
-> #### commentaires:
->Le projet actuel ne gère pas les erreurs liés aux index des données envoyées vers le serveur.   
-***I.e:*** Champs DB unique, etc.

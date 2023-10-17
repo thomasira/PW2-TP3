@@ -90,6 +90,9 @@ class ControllerCategory implements Controller {
         RequirePage::redirect("panel");
     }
 
+    /**
+     * valider les entrées
+     */
     private function Validate() {
         RequirePage::library("Validation");
         $val = new Validation;

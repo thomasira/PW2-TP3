@@ -103,6 +103,9 @@ class ControllerAspect implements Controller {
         }
     }
 
+    /**
+     * valider les entrées
+     */
     public function Validate() {
         if($_SERVER["REQUEST_METHOD"] != "POST") {
             requirePage::redirect("error");

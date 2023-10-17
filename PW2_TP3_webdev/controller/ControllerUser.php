@@ -9,7 +9,7 @@ RequirePage::model("StampCategory");
 class ControllerUser implements Controller {
 
     /**
-     * afficher l'index
+     * rediriger vers l'index de customer
      */
     public function index() {
         RequirePage::redirect("customer");
@@ -48,7 +48,7 @@ class ControllerUser implements Controller {
             $_POST["password"] = password_hash($_POST["password"] . $salt, PASSWORD_BCRYPT);
             $userId = $user->create($_POST);
 
-            //créer employé
+            //créer staff
             if($_POST["privilege_id"] < 3) {
                 $staff = new Staff;
                 $_POST["user_id"] = $userId;
@@ -86,7 +86,6 @@ class ControllerUser implements Controller {
         } 
         checkSession::sessionAuth();
 
-        $id;
         if($_SESSION["privilege_id"] < 2) $id = $_POST["id"];
         else $id = $_SESSION["id"];
 
@@ -119,6 +118,9 @@ class ControllerUser implements Controller {
 
     }
 
+    /**
+     * valider les entrées
+     */
     private function validate() {
         RequirePage::library("Validation");
         $val = new Validation;

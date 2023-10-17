@@ -9,6 +9,9 @@ class ControllerStaff implements Controller {
         CheckSession::sessionAuth(2);
     }
 
+    /**
+     * afficher l'index
+     */
     public function index() {
         $staff = new Staff;
         $data["staff"] = $staff->read();
@@ -21,6 +24,9 @@ class ControllerStaff implements Controller {
         Twig::render("staff/index.php", $data);
     }
 
+    /**
+     * afficher le formulaire créer
+     */
     public function create() {
         $privilege = new Privilege;
         $data["privileges"] = $privilege->read();
@@ -28,6 +34,9 @@ class ControllerStaff implements Controller {
         Twig::render("user/create.php", $data);
     }
 
+    /**
+     * supprimer une entrée(staff + user)
+     */
     public function delete() {
         if($_SERVER["REQUEST_METHOD"] != "POST"){
             requirePage::redirect("error");
