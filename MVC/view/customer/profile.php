@@ -28,7 +28,7 @@
         </section>
         <section>
             <a href="{{ path }}user/edit" class="button">modify info</a>
-            <form action="{{ path }}user/delete" method="post">
+            <form action="{{ path }}customer/delete" method="post">
                 <input type="hidden" name="id" value="{{ customer.user_id }}">
                 <input type="submit" class="button warning" value="delete account">
             </form>

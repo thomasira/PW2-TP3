@@ -2,10 +2,9 @@
 RequirePage::model("Customer");
 RequirePage::model("User");
 RequirePage::model("StampCategory");
+RequirePage::model("StampArchive");
 RequirePage::model("Privilege");
 RequirePage::model("Stamp");
-
-
 
 class ControllerCustomer implements Controller {
 
@@ -42,6 +41,11 @@ class ControllerCustomer implements Controller {
                     $stampCategories->deleteStampCat($stamp_id);
 
                     $stamp = new Stamp;
+                    $deletedStamp = $stamp->readId($stamp_id);
+
+                    $stampArchive = new StampArchive;
+                    $stampArchive->create($deletedStamp);
+                    
                     $stamp->delete($stamp_id);
                 }
             }
@@ -52,7 +56,7 @@ class ControllerCustomer implements Controller {
             
             if($_SESSION["privilege_id"] == 3) {
                 session_destroy();
-                RequirePage::redirect("user");
+                RequirePage::redirect("");
             } elseif($_SESSION["privilege_id"] < 2) RequirePage::redirect("panel");
         }
     }

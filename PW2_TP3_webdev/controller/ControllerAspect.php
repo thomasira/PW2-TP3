@@ -103,11 +103,7 @@ class ControllerAspect implements Controller {
         }
     }
 
-    public function Validate() {
-        if($_SERVER["REQUEST_METHOD"] != "POST") {
-            requirePage::redirect("error");
-            exit();
-        }
+    private function Validate() {
         RequirePage::library("Validation");
         $val = new Validation;
 

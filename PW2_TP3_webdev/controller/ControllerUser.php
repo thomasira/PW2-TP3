@@ -12,45 +12,8 @@ class ControllerUser implements Controller {
      * afficher l'index
      */
     public function index() {
-        $user = new User;
-        $read = $user->read();
-        $data = ["users" => $read];
-        Twig::render("user/user-index.php", $data);
+        RequirePage::redirect("customer");
     }
-
-    public function delete() {
-        if($_SERVER["REQUEST_METHOD"] != "POST"){
-            requirePage::redirect("error");
-            exit();
-        } else {
-            $id;
-            if($_SESSION["privilege_id"] < 2) $id = $_POST["id"];
-            else $id = $_SESSION["id"];
-
-            
-            $stamp = new Stamp;
-            $where = ["target" => "customer_user_id", "value" => $id];
-            $stamps = $stamp->readWhere($where);
-
-            if($stamps) {
-                foreach($stamps as $stamp) {
-                    $stamp_id = $stamp["id"];
-                    $stampCategories = new StampCategory;
-                    $stampCategories->deleteStampCat($stamp_id);
-
-                    $stamp = new Stamp;
-                    $stamp->delete($stamp_id);
-                }
-            }
-            $user = new User;
-            $user->delete($id);
-            if($_SESSION["privilege_id"] == 3) {
-                session_destroy();
-                RequirePage::redirect("user");
-            } elseif($_SESSION["privilege_id"] > 2) RequirePage::redirect("panel");
-        }
-    }
-    
 
     /**
      * enregistrer une entrée dans la DB
@@ -70,7 +33,7 @@ class ControllerUser implements Controller {
             //vérifier si email existe dans la DB
             $user = new User;
             $where["target"] = "email";
-            $where["value"] = $email;
+            $where["value"] = $_POST["email"];
             $exist = $user->ReadWhere($where);
             if($exist) {
                 $data["error"] = "email already exists";
@@ -112,47 +75,15 @@ class ControllerUser implements Controller {
         }
     }
 
-    /**
-     * afficher un utilisateur
-     */
-    public function show($id) {
-        $user = new User;
-        $data["user"] = $user->readId($id);
-
-/*         $stamp = new Stamp;
-        $where = ["target" => "user_id", "value" => $data["user"]["id"]];
-        $data["stamps"] = $stamp->readWhere($where); */
-
-        Twig::render("user/user-show.php", $data);
-    }
-
-    /**
-     * afficher le profil d'utilisateur
-     */
-    public function profile() {
-        if(isset($_SESSION["fingerPrint"]) && $_SESSION["name"] == "root") {
-            RequirePage::redirect("panel");
-        } 
-        if(!isset($_SESSION["fingerPrint"])) {
-            Twig::render("error.php");
-            exit();
-        } 
-
-        $id = $_SESSION["id"];
-        $user = new User;
-        $data["user"] = $user->readId($id);
-
-        $stamp = new Stamp;
-        $where = ["target" => "user_id", "value" => $data["user"]["id"]];
-        $data["stamps"] = $stamp->readWhere($where);
-        
-        Twig::render("user-profile.php", $data);
-    }
-
+   
     /**
      * afficher le formulaire mettre à jour
      */
     public function edit() {
+        if($_SERVER["REQUEST_METHOD"] != "POST"){
+            requirePage::redirect("error");
+            exit();
+        } 
         checkSession::sessionAuth();
 
         $id;
