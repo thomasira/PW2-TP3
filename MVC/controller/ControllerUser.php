@@ -5,6 +5,7 @@ RequirePage::model("Staff");
 RequirePage::model("Stamp");
 RequirePage::model("Customer");
 RequirePage::model("StampCategory");
+RequirePage::library("Mailer");
 
 class ControllerUser implements Controller {
 
@@ -41,6 +42,12 @@ class ControllerUser implements Controller {
                 else Twig::render("login/index.php", $data);
                 exit();
             }
+
+            $mail = new Mailer;
+
+            print_r($mail);
+            $mail->sendMail($_POST["email"]);
+            
 
             //créer utilisateur
             $user = new User;
