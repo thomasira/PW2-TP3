@@ -15,16 +15,18 @@ e2395387
 > * [Niveaux d'accès](#sur-les-niveaux-daccès)
 > * [Architecture](#sur-larchitecture-du-projet)
 > * [Script php](#sur-le-script-php)
+> * [Validation](#sur-la-validation-et-la-gestion-derreurs)
 
 
 ## Mises à jour 
 
 > ### TP3 | 10/16/2023
 > * nouvelle structure de DB (voir diagram ou presentation)
-> * implémenter une journal de bord
+> * implémenter un journal de bord
 > * implémenter archivage des étampes
-> * implémenter importation image
 > * changer structure de niveau d'accès
+> * implémenter [mailer](#mailer)
+> * implémenter [importation image](#import-image)
 
 ## Notes
 
@@ -147,10 +149,17 @@ Le script permet de mettre en place la majorité des fonctionnalités du projet.
 > * trouver ses *stamps* et les supprimer
 > * trouver leurs *stamp_categories* et les supprimer
 
-> #### commentaires:
->Seules les méthodes et fonctions complexes ou non-vues
-sont explicitement commentées dans le script.
+> ### import image
+> Il est désormais possible d'importer une image lors de la création d'un timbre. La limite de transfert est de 2MB.  
+> * l'image n'est pas supprimée du dossier lors de la suppression d'un timbre->**will fix**  
+> * une image par default est utilisé si aucune image associée
 
+> ### mailer
+> Un email de bienvenue est envoyé à l'utilisateur lors de la création d'un compte. 
+> * **n'est pas implementé dans webdev, erreur d'accès au serveur**
+> * utilise PHPMAILER voir *lib/Mailer(sample).php*
+> * Il utilise le serveur google et pour ce projet, utilise mon email perso. 
+> * le fichier réel n'est pas inclus dans la remise du projet pour des enjeux de confidentialité
 
 ## Sur la validation et la gestion d'erreurs  
 

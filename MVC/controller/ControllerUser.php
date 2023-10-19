@@ -42,12 +42,11 @@ class ControllerUser implements Controller {
                 else Twig::render("login/index.php", $data);
                 exit();
             }
-
-            $mail = new Mailer;
-
-            print_r($mail);
-            $mail->sendMail($_POST["email"]);
             
+            // envoyer un email de bienvenue
+            $mail = new Mailer;
+            $welcome = $this->getMessage($_POST["name"]);
+            $mail->sendMail($_POST["email"], $welcome);
 
             //créer utilisateur
             $user = new User;
@@ -70,7 +69,7 @@ class ControllerUser implements Controller {
 
             //message custom ou panel si la requête est faite à l'interne(employé seulement)
             $data["success"] = "account created, please log in";
-            if($_SESSION["privilege_id"] < 2) RequirePage::redirect("panel");
+            if(isset($_SESSION["fingerprint"])) RequirePage::redirect("panel");
             else Twig::render("login/index.php", $data);
 
         } else {
@@ -78,7 +77,9 @@ class ControllerUser implements Controller {
             $data["user"] = $_POST;
 
             if(isset($_SESSION["fingerprint"])) Twig::render("user/create.php", $data);
-            else Twig::render("login/index.php", $data);
+            else {
+                Twig::render("login/index.php", $data);
+            }
         }
     }
 
@@ -140,5 +141,27 @@ class ControllerUser implements Controller {
         if(isset($nas)) $val->name("nas")->value($nas)->max(45)->required();
 
         return $val;
+    }
+
+    /**
+     * message de bienvenue
+     */
+    private function getMessage($name) {
+        return '
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Welcome to Stamps.com</title>
+        </head>
+        <body>
+            <header>
+                <h1>Welcome '.$name.' to Stamps catalog</h1>
+            </header>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae fuga veritatis quia, corporis eveniet accusantium, officia totam deleniti enim omnis est eaque necessitatibus et optio adipisci minus accusamus quasi quis.</p>
+        </body>
+        </html>
+        ';
     }
 }

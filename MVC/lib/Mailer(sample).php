@@ -9,7 +9,7 @@ class Mailer{
     public function sendMail($email) {
         $mail = new PHPMailer();
         $mail->isSMTP();
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+/*         $mail->SMTPDebug = SMTP::DEBUG_SERVER; */
         $mail->Host = 'smtp.gmail.com';
         $mail->Port = 465;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
@@ -21,17 +21,13 @@ class Mailer{
         $mail->setFrom('account@gmail.com', 'Name');
         $mail->addAddress($email);
 
-
-        $mail->Subject = 'PHPMailer GMail SMTP test';
+        $mail->Subject = 'Bienvenue sur Étampe.com';
 
         $mail->msgHTML('hello');
 
         $mail->AltBody = 'This is a plain-text message body';
         if (!$mail->send()) {
             echo 'Mailer Error: ' . $mail->ErrorInfo;
-        } else {
-            echo 'Message sent!';
         }
-        die();
     }
 }

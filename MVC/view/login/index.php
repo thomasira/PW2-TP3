@@ -5,10 +5,10 @@
         {% if error %} 
         <p class="error">{{ error }}</p>
         {% endif %}
-        <h2>Login</h2>
         {% if success %} 
-        <p class="succes">{{ success }}</p>
+        <p class="success">{{ success }}</p>
         {% endif %}
+        <h2>Login</h2>
         <form action="{{ path }}login/auth" method="post">
             <label>Email
                 <input type="email" name="email" required>
